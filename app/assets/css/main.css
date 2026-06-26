@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.mystery-quest-regular {
+  font-family: "Mystery Quest", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.mystery-quest {
+  font-family: "Mystery Quest";
+}
+
+.kurale {
+  font-family: "Kurale", serif;
+}
