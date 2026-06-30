@@ -2,9 +2,9 @@
   <!--NavBar-->
   <div class="bg-[#120A18] min-h-screen text-white">
     <div class="bg-black flex justify-between p-4">
-      <div>Profile</div>
+      <IconProfile />
       <div class="mystery-quest-regular md:text-3xl text-lg">Lebre de Junho</div>
-      <div>Cart</div>
+      <IconBag />
     </div>
 
     <div>
