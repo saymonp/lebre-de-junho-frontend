@@ -98,47 +98,38 @@
     </section>
 
     <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
+      <div class="flex gap-2 justify-center">
       
-      <div class="flex">
-
-        <div>
-
-          <div class="relative overflow-hidden">
+          <div class="relative overflow-hidden rounded-lg border border-[#DBC695]/30">
 
             <img class="object-cover opacity-90 w-full h-50" src="/cristais.jpg" alt="cristais">
-            <div class="absolute inset-0 flex flex-col justify-center m-2">
-              <p class="kurale capitalize text-xl text-center lg:text-4xl text-white text-shadow">
+
+            <div
+              class="absolute inset-0 m-auto w-4/5 h-20 bg-black/60 backdrop-blur-sm flex flex-col justify-center items-center rounded border border-[#DBC695]/20 p-1">
+              <p class="kurale capitalize text-xl lg:text-3xl text-white text-shadow-lg">
                 Cristais
               </p>
-              <p class="kurale capitalize text-xs text-center text-[#DBC695] text-shadow">
+              <p class="kurale text-[10px] lg:text-sm text-center text-[#DBC695]/90 tracking-wider mt-1">
                 Sinta a Energia Fluir
               </p>
             </div>
-            <div class="absolute inset-0 w-1/2 h-15 md:aspect-video bg-black flex flex-col justify-center text-center"></div>
+
           </div>
-
+       
+        <div class="relative overflow-hidden rounded-lg border border-[#DBC695]/30">
+          <img class="w-full h-50 object-cover rounded-lg" src="/velas2.jpg" alt="velas">
+          <div
+            class="absolute inset-0 m-auto w-4/5 h-20 bg-black/60 backdrop-blur-sm flex flex-col justify-center items-center rounded border border-[#DBC695]/20 p-1">
+            <p class="kurale capitalize text-xl lg:text-3xl text-white text-shadow-lg">
+              Velas
+            </p>
+            <p class="kurale text-[10px] lg:text-sm text-center text-[#DBC695]/90 tracking-wider mt-1">
+              Aroma Mágico
+            </p>
+          </div>
         </div>
-
-
-        <img src="/g2.jpg">
-        <img src="/g3.jpg">
       </div>
     </section>
-<div class="relative max-w-xl overflow-hidden rounded-lg shadow-lg">
-        <!-- The Image -->
-        <img class="w-full h-64 object-cover"
-          src="https://images.unsplash.com/photo-1782231592083-1f2493394daf?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Beach sunset">
-
-        <!-- Dark Gradient Overlay for Readability -->
-        <div class="absolute inset-0 bg-black/40"></div>
-
-        <!-- Centered Text Content -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-          <h2 class="text-white text-3xl font-bold tracking-tight">Explore the World</h2>
-          <p class="text-slate-200 mt-2 text-sm max-w-sm">Discover hidden beaches and beautiful coastlines around the
-            globe.</p>
-        </div>
-      </div>
+  
   </div>
 </template>
