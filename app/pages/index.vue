@@ -1,7 +1,7 @@
 <template>
   <!--NavBar-->
   <div class="bg-[#120A18] min-h-screen text-white">
-    <NavBar />
+    <NavBar v-model:isCriarConta="isCriarConta"/>
 
     <div>
       <div class="relative flex justify-center items-center w-full aspect-[4/5] md:aspect-video bg-[#150522]">
@@ -20,7 +20,7 @@
             Crie sua Conta para garantir Descontos
           </div>
           <div class="p-2">
-            <button class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
+            <button @click="isCriarConta = !isCriarConta" class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
                 hover:scale-102 active:scale-97">
               Criar Conta
@@ -161,3 +161,7 @@
   </div>
   
 </template>
+
+<script setup lang="ts">
+const isCriarConta = ref(false);
+</script>
