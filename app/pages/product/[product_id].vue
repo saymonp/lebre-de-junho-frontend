@@ -6,7 +6,7 @@
 
       <!-- 1. Imagem Principal (Grande) com Moldura de Vitral / Mística -->
       <div
-        class="relative w-full aspect-[4/5] bg-[#120A18] rounded-t-full rounded-b-none border border-[#DBC695]/30 overflow-hidden shadow-xl">
+        class="lg:max-w-sm lg:mx-auto relative w-full aspect-[4/5] bg-[#120A18] rounded-t-full rounded-b-none border border-[#DBC695]/30 overflow-hidden shadow-xl">
         <img :src="activeImage" alt="Imagem do produto"
           class="w-full h-full object-cover transition-all duration-500" />
 
@@ -32,9 +32,9 @@
 
     <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
       <div class="flex flex-col space-y-2">
-        <div class="flex justify-between items-center">
-          <h2 class="kurale font-extrabold text-4xl mt-5 mb-1">Carrot Bunny</h2>
-          <IconBag />
+        <div class="flex justify-between items-center mt-7 mb-5">
+          <h2 class="kurale font-extrabold text-4xl ">Carrot Bunny</h2>
+          <IconShare class="w-8 h-8 cursor-pointer"/>
         </div>
         <div class="flex gap-3 items-center">
           <p class="kurale text-xl text-[#DBC695] line-through">R$ 89,99</p>
@@ -56,7 +56,7 @@
         </p>
       </div>
       <div>
-        <h2 @click="showMore = !showMore" class="kurale font-extrabold text-xl mt-5 mb-1">Dimensões e Materiais {{ showMore ? '▲' : '▼' }}</h2>
+        <h2 @click="showMore = !showMore" class="kurale font-extrabold text-xl mt-5 mb-1 cursor-pointer">Dimensões e Materiais {{ showMore ? '▲' : '▼' }}</h2>
         <ul v-if="showMore" class="list-disc">
           <li>
             <p class="kurale text-2sm">Altura: 18 cm (da ponta das orelhas até a base)</p>
@@ -100,77 +100,6 @@
     <Footer />
   </div>
 
-
-  <div id="default-carousel" class="relative w-full" data-carousel="slide">
-    <!-- Carousel wrapper -->
-    <div class="relative h-56 overflow-hidden rounded-base md:h-96">
-      <!-- Item 1 -->
-      <div class="hidden duration-700 ease-in-out" data-carousel-item>
-        <img src="https://images.unsplash.com/photo-1782231592083-1f2493394daf"
-          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-      </div>
-      <!-- Item 2 -->
-      <div class="hidden duration-700 ease-in-out" data-carousel-item>
-        <img src="https://images.unsplash.com/photo-1782231592083-1f2493394daf"
-          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-      </div>
-      <!-- Item 3 -->
-      <div class="hidden duration-700 ease-in-out" data-carousel-item>
-        <img src="https://images.unsplash.com/photo-1782231592083-1f2493394daf"
-          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-      </div>
-      <!-- Item 4 -->
-      <div class="hidden duration-700 ease-in-out" data-carousel-item>
-        <img src="https://images.unsplash.com/photo-1782231592083-1f2493394daf"
-          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-      </div>
-      <!-- Item 5 -->
-      <div class="hidden duration-700 ease-in-out" data-carousel-item>
-        <img src="https://images.unsplash.com/photo-1782231592083-1f2493394daf"
-          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-      </div>
-    </div>
-    <!-- Slider indicators -->
-    <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-      <button type="button" class="w-3 h-3 rounded-base" aria-current="true" aria-label="Slide 1"
-        data-carousel-slide-to="0"></button>
-      <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 2"
-        data-carousel-slide-to="1"></button>
-      <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 3"
-        data-carousel-slide-to="2"></button>
-      <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 4"
-        data-carousel-slide-to="3"></button>
-      <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 5"
-        data-carousel-slide-to="4"></button>
-    </div>
-    <!-- Slider controls -->
-    <button type="button"
-      class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-      data-carousel-prev>
-      <span
-        class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-        <svg class="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-          height="24" fill="none" viewBox="0 0 24 24">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="m15 19-7-7 7-7" />
-        </svg>
-        <span class="sr-only">Previous</span>
-      </span>
-    </button>
-    <button type="button"
-      class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-      data-carousel-next>
-      <span
-        class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-        <svg class="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-          height="24" fill="none" viewBox="0 0 24 24">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="m9 5 7 7-7 7" />
-        </svg>
-        <span class="sr-only">Next</span>
-      </span>
-    </button>
-  </div>
 </template>
 
 
