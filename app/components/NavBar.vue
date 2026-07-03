@@ -4,11 +4,13 @@
         <NuxtLink :to="'/'">
             <div class="mystery-quest-regular md:text-3xl text-lg">Lebre de Junho</div>
         </NuxtLink>
-        <IconBag />
+        <NuxtLink :to="'/bag'">
+            <IconBag />
+        </NuxtLink>
     </div>
 
     <div v-show="isCriarConta"
-        class="fixed z-50 inset-0 m-auto flex flex-col justify-center items-center bg-black/90 w-75 h-150 lg:w-150 lg:h-90 p-8 overflow-hidden shadow-lg border outline-1 outline-[#DBC695]">
+        class="fixed z-50 inset-0 m-auto flex flex-col justify-center items-center bg-black/90 w-75 h-150 lg:w-150 lg:h-150 p-8 overflow-hidden shadow-lg border outline-1 outline-[#DBC695]">
         <div class="text-center text-white px-2 kurale text-3xl lg:text-5xl text-shadow-lg">
             Crie sua Conta
         </div>
@@ -54,7 +56,7 @@
     </div>
 
     <div v-show="isLogin"
-        class="fixed z-50 inset-0 m-auto flex flex-col justify-center items-center bg-black/90 w-75 h-100 lg:w-140 lg:h-90 p-8 overflow-hidden shadow-lg border outline-1 outline-[#DBC695]">
+        class="fixed z-50 inset-0 m-auto flex flex-col justify-center items-center bg-black/90 w-75 h-100 lg:w-140 lg:h-100 p-8 overflow-hidden shadow-lg border outline-1 outline-[#DBC695]">
         <div class="text-center text-white px-2 kurale text-3xl lg:text-5xl text-shadow-lg">
             Entrar
         </div>
