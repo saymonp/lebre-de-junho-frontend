@@ -1,23 +1,9 @@
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  is_admin: boolean;
-  roles: string[];
-  permissions: string[];
-}
-
-export interface LoginResponse {
-  access_token: string
-  token_type: string
-  user: User
-}
+import type { User, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '@/types/Users';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: useCookie<User | null>('user') || null,
-    token: useCookie('token').value || null
+    token: useCookie('access_token').value || null
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
@@ -25,9 +11,9 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     setUser(userData: User, tokenData: string) {
       const userCookie = useCookie<User | null>('user')
-      const tokenCookie = useCookie('token')
+      const tokenCookie = useCookie('access_token')
 
-      // É só atribuir direto! O Nuxt transforma o objeto User em texto no navegador sozinho
+      // É só atribuir direto, Nuxt transforma o objeto User em texto no navegador sozinho
       userCookie.value = userData
       tokenCookie.value = tokenData
 
@@ -38,33 +24,38 @@ export const useAuthStore = defineStore('auth', {
       const { $api } = useNuxtApp()
       if (!this.token) return;
       try {
-        const response = await $api<any>('/me'); // Rota no Laravel que retorna Auth::user()
+        const response = await $api<User>('/user'); // Rota no Laravel que retorna Auth::user()
         this.user = response;
       } catch (error) {
         this.logout(); // Se o token for inválido/expirado, limpa tudo
       }
     },
-    async login(credentials: any) {
+    async login(credentials: LoginRequest) {
       const { $api } = useNuxtApp()
       const response = await $api<LoginResponse>('/login', { body: credentials, method: 'POST' });
       this.setUser(response.user, response.access_token);
     },
-    async register(credentials: any) {
+    async register(credentials: RegisterRequest) {
       const { $api } = useNuxtApp()
-      const response = await $api<LoginResponse>('/register',{ body: credentials, method: 'POST' });
+      const response = await $api<LoginResponse>('/register', { body: credentials, method: 'POST' });
       this.setUser(response.user, response.access_token);
     },
-    logout() {
+    async logout() {
+      const { $api } = useNuxtApp()
+      const response = await $api<{ message: string }>('/logout', { method: 'POST' });
+
       this.token = null;
       this.user = null;
       const userCookie = useCookie('user')
       const tokenCookie = useCookie('token')
       userCookie.value = null
       tokenCookie.value = null
+
+      return response;
     },
     async deleteAccount() {
       const { $api } = useNuxtApp()
-      const response = await $api<any>('/me/delete', { method: 'DELETE' });
+      const response = await $api<any>('/user', { method: 'DELETE' });
       if (response.status === 200) {
         this.token = null;
         this.user = null;
@@ -85,6 +76,16 @@ export const useAuthStore = defineStore('auth', {
       const { $api } = useNuxtApp()
       const response = await $api<any>('/reset-password', { body: data, method: 'POST' });
       this.setUser(response.data.user, response.data.access_token);
+    },
+    async verifyEmail(data: { email: string, token: string }) {
+      const { $api } = useNuxtApp()
+      const response = await $api<any>('/verify/email', { body: data, method: 'POST' });
+      this.setUser(response.data.user, response.data.access_token);
+    },
+    async update(data: User) {
+      const { $api } = useNuxtApp()
+      const response = await $api<{ message: string }>('/user', { body: data, method: 'PUT' });
+      return response;
     },
   }
 });
