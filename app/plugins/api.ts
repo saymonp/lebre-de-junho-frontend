@@ -12,7 +12,7 @@ export default defineNuxtPlugin(() => {
     },
 
     onRequest({ options }) {
-      const token = useCookie('token').value
+      const token = useCookie('access_token').value
 
       if (token) {
         options.headers.set('Authorization', `Bearer ${token}`)

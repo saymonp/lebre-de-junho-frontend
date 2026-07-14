@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
       const userCookie = useCookie<User | null>('user')
       const tokenCookie = useCookie('access_token')
 
-      // É só atribuir direto, Nuxt transforma o objeto User em texto no navegador sozinho
+      // Nuxt transforma o objeto User em texto no navegador sozinho
       userCookie.value = userData
       tokenCookie.value = tokenData
 
@@ -24,21 +24,24 @@ export const useAuthStore = defineStore('auth', {
       const { $api } = useNuxtApp()
       if (!this.token) return;
       try {
-        const response = await $api<User>('/user'); // Rota no Laravel que retorna Auth::user()
+        const response = await $api<User>('/user');
         this.user = response;
       } catch (error) {
         this.logout(); // Se o token for inválido/expirado, limpa tudo
       }
     },
-    async login(credentials: LoginRequest) {
+    async login(credentials: LoginRequest): Promise<LoginResponse> {
       const { $api } = useNuxtApp()
       const response = await $api<LoginResponse>('/login', { body: credentials, method: 'POST' });
       this.setUser(response.user, response.access_token);
+      return response;
     },
-    async register(credentials: RegisterRequest) {
+    async register(credentials: RegisterRequest): Promise<LoginResponse> 
+    {
       const { $api } = useNuxtApp()
       const response = await $api<LoginResponse>('/register', { body: credentials, method: 'POST' });
       this.setUser(response.user, response.access_token);
+      return response;
     },
     async logout() {
       const { $api } = useNuxtApp()
