@@ -1,7 +1,7 @@
 <template>
     <div class="bg-black flex justify-between p-4">
         <IconProfile v-if="authStore.user"  @click="profileMenu = !profileMenu" />
-        <IconProfile v-else @click="" />
+        <IconProfile v-else @click="isLogin = !isLogin" />
         <Transition enter-active-class="transition duration-100 ease-out"
                         enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
                         leave-active-class="transition duration-75 ease-in"
@@ -92,19 +92,26 @@
         </div>
 
         <label class="kurale text-2sm m-2 mt-5">Email</label>
-        <input type="text" placeholder=""
+        <input type="text" placeholder="" v-model="loginData.email"
             class="border border-slate-700-medium text-heading text-sm rounded-xl focus:border-slate-700 block w-full px-3 py-2 shadow-xs placeholder:text-body">
 
         <label class="kurale text-2sm m-2 mt-5">Senha</label>
-        <input type="text" placeholder=""
+        <input type="password" placeholder="" v-model="loginData.password"
             class="border border-slate-700-medium text-heading text-sm rounded-xl focus:border-slate-700 block w-full px-3 py-2 shadow-xs placeholder:text-body">
-        <button class="mt-5 text-base text-zinc-300 hover:text-white flex items-center gap-2 cursor-pointer">
+        <button class="mt-5 text-lg text-zinc-200 hover:text-white flex items-center gap-2 cursor-pointer" @click="loginWithGoogle">
             Ou entrar com Google
         </button>
+        <p class="text-sm text-zinc-400 text-center mt-1">Ao entrar com o Google você aceita os termos de 
+        <a href="/termos-de-uso" target="_blank" class="text-[#DBC695] hover:underline font-bold text-sm">Termos de
+                        Uso</a>
+                    e com a
+                    <a href="/privacidade" target="_blank" class="text-[#DBC695] hover:underline font-bold text-sm">Política
+                        de Privacidade</a></p>
         <div class="p-2">
             <button class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
-                hover:scale-102 active:scale-97">
+                hover:scale-102 active:scale-97"
+                @click="handleLogin">
                 Entrar
             </button>
         </div>
@@ -128,7 +135,12 @@ const registerData = ref<RegisterRequest>({
     email: '',
     password: '',
     aceitou_termos: false
-})
+});
+
+const loginData = ref<LoginRequest>({
+    email: '',
+    password: ''
+});
 
 const handleRegister = async () => {
     if (!registerData.value.aceitou_termos) {
@@ -170,6 +182,44 @@ const handleRegister = async () => {
 
         toast.error({
             title: 'Falha no Cadastro',
+            message: errorMessage
+        });
+    } finally {
+        isLoading.value = false;
+    }
+}
+
+const handleLogin = async () => {
+    if (!loginData.value.email || !loginData.value.password) {
+        toast.info({
+            title: 'Atenção',
+            message: 'Por favor, preencha todos os campos do formulário.'
+        });
+        return;
+    }
+    try {
+        isLoading.value = true;
+
+        const response = await authStore.login(loginData.value);
+
+        toast.success({
+            title: 'Bem-vindo(a)!',
+            message: 'Sua conta foi criada com sucesso. Aproveite a loja!'
+        });
+
+        // Limpa os campos do formulário e fecha a modal de login
+        loginData.value = {
+            email: '',
+            password: ''
+        };
+        isLogin.value = false;
+
+    } catch (error: any) {
+        // Captura erros de validação vindos do Laravel
+        const errorMessage = error.data?.message || 'Ocorreu um erro ao entrar na conta.';
+
+        toast.error({
+            title: 'Falha no Login',
             message: errorMessage
         });
     } finally {
