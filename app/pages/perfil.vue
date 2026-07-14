@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-//import { useAuthStore } from '@/stores/auth'
 
-//const authStore = useAuthStore()
+import { useAuthStore } from '@/stores/auth';
 
-// Estados simulados (Substitua pelas chamadas reais da sua API/Store se necessário)
-const usuario = ref({
-  name: 'Patrick',
-  email: 'patrick@email.com',
-  avatar: '' // Se vazio, mostra o fallback místico
-})
+const authStore = useAuthStore();
+const toast = useToast()
+
+const handleLogout = async () => {
+    try {
+        await authStore.logout();
+        toast.success({ title: 'Até logo!', message: 'Você saiu da sua conta.' });
+
+        navigateTo('/');
+    } catch (error) {
+        toast.error({ title: 'Erro', message: 'Não foi possível realizar o logout.' });
+    }
+};
 
 const contadoresPedidos = ref({
   aPagar: 1,
@@ -22,14 +27,6 @@ const enderecos = ref([
   { id: 2, tipo: 'Trabalho', logradouro: 'Av. das Runas, 1060 - Sala 4', cidade: 'São Paulo - SP', padrao: false }
 ])
 
-const handleLogout = async () => {
-  try {
-    // await authStore.logout()
-    navigateTo('/')
-  } catch (error) {
-    console.error('Erro ao sair:', error)
-  }
-}
 </script>
 
 <template>
@@ -41,16 +38,15 @@ const handleLogout = async () => {
         
         <!-- Avatar/Foto -->
         <div class="relative w-16 h-16 rounded-full border border-[#DBC695]/40 bg-black/60 flex items-center justify-center overflow-hidden shadow-lg">
-          <img v-if="usuario.avatar" :src="usuario.avatar" alt="Avatar" class="w-full h-full object-cover" />
-          <span v-else class="text-[#DBC695] text-2xl">🐇</span>
+          <span class="text-[#DBC695] text-2xl">🐇</span>
         </div>
 
         <!-- Infos do Usuário -->
         <div class="flex-1">
           <h1 class="kurale text-xl font-bold text-[#DBC695] text-shadow-md">
-            {{ usuario.name || 'Viajante Místico' }}
+            {{ authStore.user?.name }}
           </h1>
-          <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ usuario.email }}</p>
+          <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.email }}</p>
         </div>
 
         <!-- Botão Sair -->
@@ -70,7 +66,7 @@ const handleLogout = async () => {
       <div class="bg-black/40 border border-[#DBC695]/10 rounded-xl p-4 backdrop-blur-xs">
         <div class="flex justify-between items-center border-b border-[#DBC695]/10 pb-3 mb-4">
           <h2 class="kurale text-sm font-bold text-[#DBC695] tracking-wide flex items-center gap-2">
-            📦 Meus Pedidos
+            Meus Pedidos
           </h2>
           <button @click="navigateTo('/pedidos')" class="kurale text-xs text-zinc-400 hover:text-[#DBC695] transition-colors">
             Ver histórico >
@@ -171,8 +167,7 @@ const handleLogout = async () => {
           class="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors text-left cursor-pointer"
         >
           <div class="flex items-center gap-3">
-            <span class="text-sm">📜</span>
-            <span class="kurale text-xs text-zinc-300 font-medium">Nossa História (Sobre Nós)</span>
+            <span class="kurale text-xs text-zinc-300 font-medium cursor-pointer">Nossa História (Sobre Nós)</span>
           </div>
           <span class="text-zinc-600 text-xs">></span>
         </button>
