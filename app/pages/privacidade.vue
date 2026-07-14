@@ -2,7 +2,7 @@
     <div class="bg-[#120A18] min-h-screen text-white">
         <NavBar />
         <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
-            <h1 class="mt-10 font-extrabold text-9xl text-center">POLÍTICA DE PRIVACIDADE – LEBRE DE JUNHO</h1>
+            <h1 class="mt-10 font-extrabold text-xl text-center">POLÍTICA DE PRIVACIDADE – LEBRE DE JUNHO</h1>
             <p class="mt-10">Última atualização: 14 de julho de 2026</p>
 
             <p class="mt-3">Versão: 1.0</p>
