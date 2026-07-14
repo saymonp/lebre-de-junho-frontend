@@ -18,5 +18,5 @@ export default defineNuxtConfig({
     }
   },
 
-  modules: ['@nuxt/fonts', '@pinia/nuxt'],
+  modules: ['@nuxt/fonts', '@pinia/nuxt', 'nuxt-toast'],
 })
