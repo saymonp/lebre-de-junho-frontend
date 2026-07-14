@@ -17,10 +17,10 @@
             Lebre de Junho
           </div>
           <div class="text-center text-[#DBC695] px-2 mt-5 kurale text-xl lg:text-2xl text-shadow-lg">
-            {{ authStore.user ? 'Veja Nossos Produtos em Destaque' : 'Crie sua Conta para garantir Descontos' }}
+            {{ authStore.isAuthenticated ? 'Veja Nossos Produtos em Destaque' : 'Crie sua Conta para garantir Descontos' }}
           </div>
           <div class="p-2">
-            <button v-if="authStore.user" @click="isCriarConta = !isCriarConta" class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
+            <button v-if="authStore.isAuthenticated" @click="isCriarConta = !isCriarConta" class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
                 hover:scale-102 active:scale-97">
               Ver Produtos
