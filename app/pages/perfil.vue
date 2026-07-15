@@ -4,9 +4,12 @@ definePageMeta({
 })
 
 import { useAuthStore } from '@/stores/auth';
+import { useAddressStore } from '#imports';
 
 const authStore = useAuthStore();
-const toast = useToast()
+const addressStore = useAddressStore();
+
+const toast = useToast();
 
 const handleLogout = async () => {
   try {
@@ -23,6 +26,14 @@ const contadoresPedidos = ref({
   aPagar: 1,
   preparando: 2,
   aCaminho: 0
+})
+
+const {
+    data: addresses, // Aqui dizemos: Pegue os dados retornados e coloque na constante reativa chamada 'movies'
+    status,       // O Nuxt altera isso sozinho! Começa como 'pending' e muda para 'success' ou 'error' no final da requisição
+    error
+} = await useAsyncData('addresses-list', () => addressStore.indexAddresses(), {
+    lazy: true
 })
 
 const enderecos = ref([
@@ -125,30 +136,36 @@ const enderecos = ref([
       <div class="bg-black/40 border border-[#DBC695]/10 rounded-xl p-4 backdrop-blur-xs">
         <div class="flex justify-between items-center border-b border-[#DBC695]/10 pb-3 mb-3">
           <h2 class="kurale text-sm font-bold text-[#DBC695] tracking-wide flex items-center gap-2">
-            📍 Endereços de Entrega
+            Endereços de Entrega
           </h2>
-          <button @click="navigateTo('/perfil/enderecos/novo')" class="kurale text-xs text-[#DBC695] hover:underline">
+          <button @click="navigateTo('/perfil/enderecos/novo')" class="kurale text-base text-[#DBC695] hover:underline cursor-pointer">
             + Adicionar
           </button>
         </div>
 
         <div class="flex flex-col gap-3">
-          <div v-for="end in enderecos" :key="end.id"
+          <div v-if="status === 'pending'" class="kurale text-sm">
+                        Carregando filmes...
+                    </div>
+                    <div v-else-if="status === 'error'" class="kurale text-sm">
+                        Houve um erro: {{ error?.message }}
+                    </div>
+          <div v-for="addr in addresses?.data" :key="addr.id"
             class="p-3 rounded-lg bg-black/20 border border-zinc-800 flex justify-between items-start">
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <span class="kurale text-xs font-bold text-zinc-300">{{ end.tipo }}</span>
-                <span v-if="end.padrao"
+                <span class="kurale text-xs font-bold text-zinc-300">{{ addr.bairro }}</span>
+                <span v-if="addr.padrao"
                   class="text-[10px] bg-[#DBC695]/10 text-[#DBC695] border border-[#DBC695]/30 px-1.5 py-0.5 rounded">
                   Padrão
                 </span>
               </div>
-              <p class="text-xs text-zinc-400">{{ end.logradouro }}</p>
-              <p class="text-[11px] text-zinc-500">{{ end.cidade }}</p>
+              <p class="text-xs text-zinc-400">{{ addr.logradouro }}</p>
+              <p class="text-[11px] text-zinc-500">{{ addr.cidade }}</p>
             </div>
-            <button @click="navigateTo(`/perfil/enderecos/${end.id}`)"
-              class="text-zinc-500 hover:text-[#DBC695] text-xs px-1">
-              ✏️
+            <button @click="navigateTo(`/perfil/enderecos/${addr.id}`)"
+              class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
+              Editar
             </button>
           </div>
         </div>
