@@ -5,9 +5,11 @@ definePageMeta({
 
 import { useAuthStore } from '@/stores/auth';
 import { useAddressStore } from '#imports';
+import type { Address } from '@/types/Addresses';
 
 const authStore = useAuthStore();
 const addressStore = useAddressStore();
+
 
 const toast = useToast();
 
@@ -29,21 +31,36 @@ const contadoresPedidos = ref({
 })
 
 const {
-    data: addresses, // Aqui dizemos: Pegue os dados retornados e coloque na constante reativa chamada 'movies'
-    status,       // O Nuxt altera isso sozinho! Começa como 'pending' e muda para 'success' ou 'error' no final da requisição
-    error
-} = await useAsyncData('addresses-list', () => addressStore.indexAddresses(), {
-    lazy: true
-})
+  data: initialData,
+  status,
+  error
+} = await useAsyncData('addresses-list', () => addressStore.indexAddresses());
 
-const enderecos = ref([
-  { id: 1, tipo: 'Principal', logradouro: 'Rua dos Arcanos, 777', cidade: 'São Paulo - SP', padrao: true },
-  { id: 2, tipo: 'Trabalho', logradouro: 'Av. das Runas, 1060 - Sala 4', cidade: 'São Paulo - SP', padrao: false }
-])
+const addresses = ref(initialData.value);
+
+const isModalOpen = ref(false);
+const selectedAddress = ref<Address | null>(null);
+
+// Função para abrir em modo de criação
+const openCreateModal = () => {
+  selectedAddress.value = null; // Garante que está limpo para criar novo
+  isModalOpen.value = true;
+};
+
+// Função para abrir em modo de edição carregando os dados
+const openEditModal = (address: Address) => {
+  selectedAddress.value = address; // Passa o endereço selecionado para a prop da modal
+  isModalOpen.value = true;
+};
+
+const refreshAddressesList = async () => {
+  addresses.value = await addressStore.indexAddresses()
+};
 
 </script>
 
 <template>
+
   <div class="min-h-screen w-full bg-[#0a050f] text-zinc-200 pb-12">
     <NavBar />
     <!-- Header do Perfil (Estilo Shopee / Identidade Lebre) -->
@@ -138,18 +155,18 @@ const enderecos = ref([
           <h2 class="kurale text-sm font-bold text-[#DBC695] tracking-wide flex items-center gap-2">
             Endereços de Entrega
           </h2>
-          <button @click="navigateTo('/perfil/enderecos/novo')" class="kurale text-base text-[#DBC695] hover:underline cursor-pointer">
+          <button @click="openCreateModal" class="kurale text-base text-[#DBC695] hover:underline cursor-pointer">
             + Adicionar
           </button>
         </div>
-
+        <AddressFormModal v-model:isOpen="isModalOpen" :addressToEdit="selectedAddress" @saved="refreshAddressesList" />
         <div class="flex flex-col gap-3">
           <div v-if="status === 'pending'" class="kurale text-sm">
-                        Carregando filmes...
-                    </div>
-                    <div v-else-if="status === 'error'" class="kurale text-sm">
-                        Houve um erro: {{ error?.message }}
-                    </div>
+            Carregando endereços...
+          </div>
+          <div v-else-if="status === 'error'" class="kurale text-sm">
+            Houve um erro: {{ error?.message }}
+          </div>
           <div v-for="addr in addresses?.data" :key="addr.id"
             class="p-3 rounded-lg bg-black/20 border border-zinc-800 flex justify-between items-start">
             <div>
@@ -163,7 +180,7 @@ const enderecos = ref([
               <p class="text-xs text-zinc-400">{{ addr.logradouro }}</p>
               <p class="text-[11px] text-zinc-500">{{ addr.cidade }}</p>
             </div>
-            <button @click="navigateTo(`/perfil/enderecos/${addr.id}`)"
+            <button @click="openEditModal(addr)"
               class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
               Editar
             </button>
