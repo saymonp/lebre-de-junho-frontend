@@ -12,5 +12,11 @@ export default defineNuxtConfig({
     ],
   },
 
-  modules: ['@nuxt/fonts'],
+  runtimeConfig: {
+    public: {
+      apiBase: import.meta.env.VITE_BASE_URL
+    }
+  },
+
+  modules: ['@nuxt/fonts', '@pinia/nuxt', 'nuxt-toast'],
 })
