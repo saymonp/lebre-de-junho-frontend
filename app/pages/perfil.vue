@@ -9,7 +9,7 @@ import type { Address } from '@/types/Addresses';
 
 const authStore = useAuthStore();
 const addressStore = useAddressStore();
-
+const isLoading = ref(false);
 
 const toast = useToast();
 
@@ -33,10 +33,11 @@ const contadoresPedidos = ref({
 const {
   data: initialData,
   status,
-  error
+  error,
+  refresh
 } = await useAsyncData('addresses-list', () => addressStore.indexAddresses());
 
-const addresses = ref(initialData.value);
+const addresses = computed(() => initialData.value);
 
 const isModalOpen = ref(false);
 const selectedAddress = ref<Address | null>(null);
@@ -54,8 +55,28 @@ const openEditModal = (address: Address) => {
 };
 
 const refreshAddressesList = async () => {
-  addresses.value = await addressStore.indexAddresses()
+  console.log("refresh");
+  await refresh();
 };
+
+const addressDelete = async (address: Address) => {
+  try {
+    if (address.id) {
+      isLoading.value = true;
+      await addressStore.deleteAddress(address.id);
+
+      toast.success({ title: 'Sucesso', message: 'Endereço removido.' });
+
+      await refresh();
+    }
+  }
+  catch (error: any) {
+    const errorMessage = error.data?.message || 'Ocorreu um erro ao deletar o endereço.';
+    toast.error({ title: 'Erro', message: errorMessage });
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 </script>
 
@@ -63,6 +84,9 @@ const refreshAddressesList = async () => {
 
   <div class="min-h-screen w-full bg-[#0a050f] text-zinc-200 pb-12">
     <NavBar />
+    <AddressFormModal class="z-100" v-model:isOpen="isModalOpen" :addressToEdit="selectedAddress" @saved="refreshAddressesList" />
+        <div v-if="isModalOpen" @click="isModalOpen = false" class="fixed inset-0 bg-black/10 backdrop-blur-xs z-40">
+        </div>
     <!-- Header do Perfil (Estilo Shopee / Identidade Lebre) -->
     <div class="relative bg-black/40 border-b border-[#DBC695]/20 pt-8 pb-6 px-4 backdrop-blur-md">
       <div class="max-w-2xl mx-auto flex items-center gap-4">
@@ -159,7 +183,8 @@ const refreshAddressesList = async () => {
             + Adicionar
           </button>
         </div>
-        <AddressFormModal v-model:isOpen="isModalOpen" :addressToEdit="selectedAddress" @saved="refreshAddressesList" />
+        
+
         <div class="flex flex-col gap-3">
           <div v-if="status === 'pending'" class="kurale text-sm">
             Carregando endereços...
@@ -180,10 +205,17 @@ const refreshAddressesList = async () => {
               <p class="text-xs text-zinc-400">{{ addr.logradouro }}</p>
               <p class="text-[11px] text-zinc-500">{{ addr.cidade }}</p>
             </div>
-            <button @click="openEditModal(addr)"
+            <div class="flex">
+              <button @click="openEditModal(addr)"
               class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
               Editar
             </button>
+            <button @click="addressDelete(addr)"
+              class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
+              Excluir
+            </button>
+            </div>
+            
           </div>
         </div>
       </div>
