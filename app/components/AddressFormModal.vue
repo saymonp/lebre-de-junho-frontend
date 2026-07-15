@@ -137,17 +137,6 @@ const addressData = ref<CreateAddressRequest>({
     complemento: '',
     padrao: false
 });
-
-watch(() => props.addressToEdit, (newVal) => {
-    if (newVal && newVal.id) {
-        // Modo Edição: Copia os dados para evitar alterar o objeto original por referência
-        addressData.value = { ...newVal };
-    } else {
-        // Modo Criação: Reseta o formulário
-        resetForm();
-    }
-}, { immediate: true });
-
 const resetForm = () => {
     addressData.value = {
         titulo: '',
@@ -163,6 +152,18 @@ const resetForm = () => {
         padrao: false
     }
 }
+
+watch(() => props.addressToEdit, (newVal) => {
+    if (newVal && newVal.id) {
+        // Modo Edição: Copia os dados para evitar alterar o objeto original por referência
+        addressData.value = { ...newVal };
+    } else {
+        // Modo Criação: Reseta o formulário
+        resetForm();
+    }
+}, { immediate: true });
+
+
 
 const emit = defineEmits(['saved']);
 
@@ -185,40 +186,40 @@ const buscarCep = async () => {
 };
 
 const handleSave = async () => {
-  // Validação básica de campos obrigatórios
-  const requiredFields: (keyof CreateAddressRequest)[] = [
-    'titulo', 'destinatario', 'telefone', 'cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado'
-  ];
+    // Validação básica de campos obrigatórios
+    const requiredFields: (keyof CreateAddressRequest)[] = [
+        'titulo', 'destinatario', 'telefone', 'cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado'
+    ];
 
-  for (const field of requiredFields) {
-    if (!addressData.value[field]) {
-      toast.info({ title: 'Atenção', message: 'Por favor, preencha todos os campos obrigatórios (*).' });
-      return;
-    }
-  }
-
-  try {
-    isLoading.value = true;
-
-    if (isEditing.value && props.addressToEdit?.id) {
-      // ROTA DE ATUALIZAÇÃO (PUT)
-      addressStore.updateAddress(addressData.value);
-      toast.success({ title: 'Sucesso', message: 'Endereço atualizado com sucesso!' });
-    } else {
-      // ROTA DE CRIAÇÃO (POST)
-      addressStore.createAddress(addressData.value);
-      toast.success({ title: 'Sucesso', message: 'Endereço cadastrado com sucesso!' });
+    for (const field of requiredFields) {
+        if (!addressData.value[field]) {
+            toast.info({ title: 'Atenção', message: 'Por favor, preencha todos os campos obrigatórios (*).' });
+            return;
+        }
     }
 
-    emit('saved'); // Avisa o pai para recarregar a lista
-    isOpen.value = false;
-    resetForm();
+    try {
+        isLoading.value = true;
 
-  } catch (error: any) {
-    const errorMessage = error.data?.message || 'Ocorreu um erro ao salvar o endereço.';
-    toast.error({ title: 'Erro', message: errorMessage });
-  } finally {
-    isLoading.value = false;
-  }
+        if (isEditing.value && props.addressToEdit?.id) {
+            // ROTA DE ATUALIZAÇÃO (PUT)
+            addressStore.updateAddress(props.addressToEdit?.id, addressData.value);
+            toast.success({ title: 'Sucesso', message: 'Endereço atualizado com sucesso!' });
+        } else {
+            // ROTA DE CRIAÇÃO (POST)
+            addressStore.createAddress(addressData.value);
+            toast.success({ title: 'Sucesso', message: 'Endereço cadastrado com sucesso!' });
+        }
+
+        emit('saved'); // Avisa o pai para recarregar a lista
+        isOpen.value = false;
+        resetForm();
+
+    } catch (error: any) {
+        const errorMessage = error.data?.message || 'Ocorreu um erro ao salvar o endereço.';
+        toast.error({ title: 'Erro', message: errorMessage });
+    } finally {
+        isLoading.value = false;
+    }
 };
 </script>
