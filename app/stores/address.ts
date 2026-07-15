@@ -14,8 +14,8 @@ export const useAddressStore = defineStore('addresses', () => {
         })
     }
 
-    async function updateAddress(data: CreateAddressRequest): Promise<Address> {
-        return await $api<Address>('/addresses', {
+    async function updateAddress(addressId: number, data: CreateAddressRequest): Promise<Address> {
+        return await $api<Address>(`/addresses/${addressId}`, {
             body: data,
             method: 'PUT'
         })
