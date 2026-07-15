@@ -84,9 +84,10 @@ const addressDelete = async (address: Address) => {
 
   <div class="min-h-screen w-full bg-[#0a050f] text-zinc-200 pb-12">
     <NavBar />
-    <AddressFormModal class="z-100" v-model:isOpen="isModalOpen" :addressToEdit="selectedAddress" @saved="refreshAddressesList" />
-        <div v-if="isModalOpen" @click="isModalOpen = false" class="fixed inset-0 bg-black/10 backdrop-blur-xs z-40">
-        </div>
+    <AddressFormModal class="z-100" v-model:isOpen="isModalOpen" :addressToEdit="selectedAddress"
+      @saved="refreshAddressesList" />
+    <div v-if="isModalOpen" @click="isModalOpen = false" class="fixed inset-0 bg-black/10 backdrop-blur-xs z-40">
+    </div>
     <!-- Header do Perfil (Estilo Shopee / Identidade Lebre) -->
     <div class="relative bg-black/40 border-b border-[#DBC695]/20 pt-8 pb-6 px-4 backdrop-blur-md">
       <div class="max-w-2xl mx-auto flex items-center gap-4">
@@ -183,67 +184,100 @@ const addressDelete = async (address: Address) => {
             + Adicionar
           </button>
         </div>
-        
 
-        <div class="flex flex-col gap-3">
-          <div v-if="status === 'pending'" class="kurale text-sm">
+
+        <div class="flex flex-col gap-3 relative min-h-[100px]">
+
+          <div v-if="status === 'pending'" class="kurale text-sm animate-pulse text-[#DBC695]">
             Carregando endereços...
           </div>
-          <div v-else-if="status === 'error'" class="kurale text-sm">
+
+          <div v-else-if="status === 'error'" class="kurale text-sm text-red-500">
             Houve um erro: {{ error?.message }}
           </div>
-          <div v-for="addr in addresses?.data" :key="addr.id"
-            class="p-3 rounded-lg bg-black/20 border border-zinc-800 flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span class="kurale text-xs font-bold text-zinc-300">{{ addr.bairro }}</span>
-                <span v-if="addr.padrao"
-                  class="text-[10px] bg-[#DBC695]/10 text-[#DBC695] border border-[#DBC695]/30 px-1.5 py-0.5 rounded">
-                  Padrão
-                </span>
+
+          <div v-else class="flex flex-col gap-3">
+            <TransitionGroup name="list-fade" tag="div" class="flex flex-col gap-3">
+              <div v-for="addr in addresses?.data" :key="addr.id"
+                class="p-3 rounded-lg bg-black/20 border border-zinc-800 flex justify-between items-start transition-all duration-300">
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="kurale text-xs font-bold text-zinc-300">{{ addr.bairro }}</span>
+                    <span v-if="addr.padrao"
+                      class="text-[10px] bg-[#DBC695]/10 text-[#DBC695] border border-[#DBC695]/30 px-1.5 py-0.5 rounded animate-fade-in">
+                      Padrão
+                    </span>
+                  </div>
+                  <p class="text-xs text-zinc-400">{{ addr.logradouro }}</p>
+                  <p class="text-[11px] text-zinc-500">{{ addr.cidade }}</p>
+                </div>
+
+                <div class="flex">
+                  <button @click="openEditModal(addr)"
+                    class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
+                    Editar
+                  </button>
+                  <button @click="addressDelete(addr)"
+                    class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
+                    Excluir
+                  </button>
+                </div>
               </div>
-              <p class="text-xs text-zinc-400">{{ addr.logradouro }}</p>
-              <p class="text-[11px] text-zinc-500">{{ addr.cidade }}</p>
-            </div>
-            <div class="flex">
-              <button @click="openEditModal(addr)"
-              class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
-              Editar
-            </button>
-            <button @click="addressDelete(addr)"
-              class="text-zinc-300 hover:text-[#DBC695] text-sm px-1 cursor-pointer hover:underline">
-              Excluir
-            </button>
-            </div>
-            
+            </TransitionGroup>
+
           </div>
+
         </div>
+
+        <!-- SEÇÃO 3: Links Úteis e Suporte (Lista de Opções) -->
+        <div class="bg-black/40 border border-[#DBC695]/10 rounded-xl overflow-hidden backdrop-blur-xs">
+
+          <!-- Suporte -->
+          <button @click="navigateTo('/suporte')"
+            class="w-full px-4 py-3.5 flex items-center justify-between border-b border-zinc-800/60 hover:bg-white/5 transition-colors text-left cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="text-sm">💬</span>
+              <span class="kurale text-xs text-zinc-300 font-medium">Suporte & Atendimento</span>
+            </div>
+            <span class="text-zinc-600 text-xs">></span>
+          </button>
+
+          <!-- Sobre Nós -->
+          <button @click="navigateTo('/sobre')"
+            class="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors text-left cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="kurale text-xs text-zinc-300 font-medium cursor-pointer">Nossa História (Sobre Nós)</span>
+            </div>
+            <span class="text-zinc-600 text-xs">></span>
+          </button>
+
+        </div>
+
       </div>
-
-      <!-- SEÇÃO 3: Links Úteis e Suporte (Lista de Opções) -->
-      <div class="bg-black/40 border border-[#DBC695]/10 rounded-xl overflow-hidden backdrop-blur-xs">
-
-        <!-- Suporte -->
-        <button @click="navigateTo('/suporte')"
-          class="w-full px-4 py-3.5 flex items-center justify-between border-b border-zinc-800/60 hover:bg-white/5 transition-colors text-left cursor-pointer">
-          <div class="flex items-center gap-3">
-            <span class="text-sm">💬</span>
-            <span class="kurale text-xs text-zinc-300 font-medium">Suporte & Atendimento</span>
-          </div>
-          <span class="text-zinc-600 text-xs">></span>
-        </button>
-
-        <!-- Sobre Nós -->
-        <button @click="navigateTo('/sobre')"
-          class="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors text-left cursor-pointer">
-          <div class="flex items-center gap-3">
-            <span class="kurale text-xs text-zinc-300 font-medium cursor-pointer">Nossa História (Sobre Nós)</span>
-          </div>
-          <span class="text-zinc-600 text-xs">></span>
-        </button>
-
-      </div>
-
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Transição para os elementos entrando e saindo */
+.list-fade-enter-active,
+.list-fade-leave-active {
+  transition: all 0.4s ease;
+}
+
+/* Estado inicial de quando o elemento entra ou sai */
+.list-fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.list-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Evita que itens pulem de forma brusca se a lista reordenar */
+.list-fade-move {
+  transition: transform 0.4s ease;
+}
+</style>
