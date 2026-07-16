@@ -14,7 +14,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: import.meta.env.VITE_BASE_URL
+      apiBase: import.meta.env.VITE_BASE_URL,
+      awsDefaultRegion: import.meta.env.VITE_AWS_DEFAULT_REGION,
+      awsBucket: import.meta.env.VITE_AWS_BUCKET,
+      awsUsePathStyleEndpoint: import.meta.env.VITE_AWS_USE_PATH_STYLE_ENDPOINT === 'true'
     }
   },
 
