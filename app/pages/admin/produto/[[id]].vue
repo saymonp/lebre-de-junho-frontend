@@ -2,10 +2,11 @@
     <div class="bg-[#120A18] min-h-screen text-white">
         <NavBar />
         <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto py-10 pb-20">
-            <h1 class="kurale text-2xl text-[#DBC695] mb-6">{{isEditing ? 'Editar Produto' : 'Cadastrar Novo Produto' }}</h1>
+            <h1 class="kurale text-2xl text-[#DBC695] mb-6">{{ isEditing ? 'Editar Produto' : 'Cadastrar Novo Produto' }}
+            </h1>
 
             <form @submit.prevent="submitForm" class="w-full flex flex-col gap-5">
-                
+
                 <div class="w-full flex flex-col">
                     <label class="kurale text-xs text-zinc-400 mb-1 ml-1">Nome</label>
                     <input v-model="form.name" type="text" placeholder="Um nome Mágico..." required
@@ -15,13 +16,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="w-full flex flex-col">
                         <label class="kurale text-xs text-zinc-400 mb-1 ml-1">Preço (R$)</label>
-                        <input v-model.number="form.price" type="number" step="0.01" min="0" placeholder="89.00" required
+                        <input v-model.number="form.price" type="number" step="0.01" min="0" placeholder="89.00"
+                            required
                             class="w-full bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block px-3 py-2.5 shadow-xs placeholder:text-zinc-600 transition-colors disabled:opacity-50">
                     </div>
 
                     <div class="w-full flex flex-col">
                         <label class="kurale text-xs text-zinc-400 mb-1 ml-1">Preço Promocional (R$ - Opcional)</label>
-                        <input v-model.number="form.promotional_price" type="number" step="0.01" min="0" placeholder="79.00"
+                        <input v-model.number="form.promotional_price" type="number" step="0.01" min="0"
+                            placeholder="79.00"
                             class="w-full bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block px-3 py-2.5 shadow-xs placeholder:text-zinc-600 transition-colors disabled:opacity-50">
                     </div>
                 </div>
@@ -42,14 +45,16 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="w-full flex flex-col">
-                        <label class="kurale text-xs text-zinc-400 mb-1 ml-1">Dias para Produção (Fazer sob encomenda)</label>
+                        <label class="kurale text-xs text-zinc-400 mb-1 ml-1">Dias para Produção (Fazer sob
+                            encomenda)</label>
                         <input v-model.number="form.days_to_create" type="number" min="0" placeholder="3" required
                             class="w-full bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block px-3 py-2.5 shadow-xs placeholder:text-zinc-600 transition-colors disabled:opacity-50">
                     </div>
 
                     <div class="w-full flex flex-col">
                         <label class="kurale text-xs text-zinc-400 mb-1 ml-1">Categorias (Separadas por vírgula)</label>
-                        <input v-model="categoriesInput" type="text" placeholder="Decoração, Quarto Infantil, Amigurumi" required
+                        <input v-model="categoriesInput" type="text" placeholder="Decoração, Quarto Infantil, Amigurumi"
+                            required
                             class="w-full bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block px-3 py-2.5 shadow-xs placeholder:text-zinc-600 transition-colors disabled:opacity-50">
                     </div>
                 </div>
@@ -59,22 +64,26 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div class="flex flex-col">
                             <label class="text-xs text-zinc-400 mb-1">Peso (Kg)</label>
-                            <input v-model.number="form.weight" type="number" step="0.001" min="0" placeholder="0.250" required
+                            <input v-model.number="form.weight" type="number" step="0.001" min="0" placeholder="0.250"
+                                required
                                 class="bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block w-full px-3 py-2">
                         </div>
                         <div class="flex flex-col">
                             <label class="text-xs text-zinc-400 mb-1">Altura (cm)</label>
-                            <input v-model.number="form.height" type="number" step="0.1" min="0" placeholder="15" required
+                            <input v-model.number="form.height" type="number" step="0.1" min="0" placeholder="15"
+                                required
                                 class="bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block w-full px-3 py-2">
                         </div>
                         <div class="flex flex-col">
                             <label class="text-xs text-zinc-400 mb-1">Largura (cm)</label>
-                            <input v-model.number="form.width" type="number" step="0.1" min="0" placeholder="10" required
+                            <input v-model.number="form.width" type="number" step="0.1" min="0" placeholder="10"
+                                required
                                 class="bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block w-full px-3 py-2">
                         </div>
                         <div class="flex flex-col">
                             <label class="text-xs text-zinc-400 mb-1">Comprimento (cm)</label>
-                            <input v-model.number="form.length" type="number" step="0.1" min="0" placeholder="10" required
+                            <input v-model.number="form.length" type="number" step="0.1" min="0" placeholder="10"
+                                required
                                 class="bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block w-full px-3 py-2">
                         </div>
                     </div>
@@ -98,8 +107,9 @@
 
                 <div v-if="diagramas.length > 0" class="flex flex-wrap gap-3 p-1">
                     <div v-for="(d, index) in diagramas" :key="index" class="group">
-                        <span class="kurale text-sm text-zinc-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
-                            📜 {{ d.file.name }} 
+                        <span
+                            class="kurale text-sm text-zinc-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                            📜 {{ d.file.name }}
                             <button @click.prevent="removeDiagrama(index)"
                                 class="text-red-400 hover:text-red-300 transition-colors ml-2 font-bold"
                                 title="Remover Diagrama">
@@ -116,9 +126,9 @@
                         class="w-full bg-black/40 border border-zinc-700 text-white text-sm rounded-xl focus:border-[#DBC695] outline-none block px-3 py-2.5 shadow-xs placeholder:text-zinc-600 transition-colors disabled:opacity-50">
 
                     <div class="flex flex-wrap gap-2 mt-3">
-                        <span v-for="(m, index) in materiais" :key="index" 
+                        <span v-for="(m, index) in materiais" :key="index"
                             class="kurale text-sm bg-[#DBC695]/10 text-[#DBC695] border border-[#DBC695]/30 px-3 py-1 rounded-full flex items-center gap-1.5">
-                            {{ m }} 
+                            {{ m }}
                             <button type="button" @click="removeMaterial(index)"
                                 class="hover:text-red-400 transition-colors font-bold text-base">&times;</button>
                         </span>
@@ -126,7 +136,8 @@
                 </div>
 
                 <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
-                    <label class="kurale text-xs text-zinc-400 mb-1 ml-1 block">Fotos da Galeria (A primeira será a Capa)</label>
+                    <label class="kurale text-xs text-zinc-400 mb-1 ml-1 block">Fotos da Galeria (A primeira será a
+                        Capa)</label>
 
                     <label
                         class="border border-dashed border-zinc-700 hover:border-[#DBC695]/50 text-center rounded-xl block w-full px-3 py-6 cursor-pointer transition-colors bg-black/20 group">
@@ -140,8 +151,9 @@
                         <div v-for="(foto, index) in fotos" :key="index"
                             class="relative w-20 h-20 rounded-xl overflow-hidden border border-zinc-800 bg-black/40 group">
                             <img :src="foto.preview" alt="Preview" class="w-full h-full object-cover">
-                            
-                            <span v-if="index === 0" class="absolute bottom-0 left-0 right-0 bg-[#DBC695] text-[#120A18] text-[9px] font-bold text-center py-0.5">
+
+                            <span v-if="index === 0"
+                                class="absolute bottom-0 left-0 right-0 bg-[#DBC695] text-[#120A18] text-[9px] font-bold text-center py-0.5">
                                 CAPA
                             </span>
 
@@ -167,24 +179,29 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'admin' // middleware/admin.ts
+    middleware: 'admin' // middleware/admin.ts
 })
 import { ref, reactive } from 'vue'
 import { useProductStore } from '@/stores/product'
 import { useRoute } from '#app'
+import { useUploadStore } from '@/stores/uploads'
 
+const uploadStore = useUploadStore()
 // Access the current route object
 const route = useRoute()
 // Extract the 'id' parameter (matches the [id].vue filename)
-const productIdToEdit = route.params.id 
+const productIdToEdit = route.params.id
 
+const toast = useToast();
 const productStore = useProductStore()
-
 
 const isEditing = computed(() => !!productIdToEdit);
 
 // Controle de Loading
 const loading = ref(false)
+
+// controle do upload de imagens
+const uploadingToS3 = ref(false)
 
 // String separada por vírgula que vamos explodir em array antes de enviar
 const categoriesInput = ref('')
@@ -211,12 +228,12 @@ watch(() => productIdToEdit, async (newVal) => {
         // Modo Edição: Copia os dados para evitar alterar o objeto original por referência
         const productData = await productStore.showProduct(Number(newVal));
         Object.assign(form, productData.data);
-        if(productData.data.materials){
+        if (productData.data.materials) {
             materiais.value = productData.data.materials;
         }
-        if(productData.data.categories){
+        if (productData.data.categories) {
             categoriesInput.value = productData.data.categories?.join(', ');
-        }  
+        }
     }
 }, { immediate: true });
 
@@ -285,16 +302,6 @@ const removeDiagrama = (index: number) => {
 }
 
 /**
- * SIMULAÇÃO DO ENVIO PARA S3 (Presigned URLs)
- */
-async function uploadFileToS3(file: File, folder: string): Promise<string> {
-    // Simula tempo de rede
-    await new Promise(resolve => setTimeout(resolve, 800))
-    const cleanName = file.name.replace(/\s+/g, '-').toLowerCase()
-    return `https://s3.amazonaws.com/lebre-de-junho/products/${folder}/${Date.now()}-${cleanName}`
-}
-
-/**
  * Submissão do Formulário
  */
 const submitForm = async () => {
@@ -304,12 +311,12 @@ const submitForm = async () => {
         // 1. Processamento e Upload dos Arquivos (S3)
         let diagramUrl: string | null = null
         if (diagramas.value.length > 0) {
-            diagramUrl = await uploadFileToS3(diagramas.value[0]!.file, 'diagrams')
+            diagramUrl = await uploadStore.uploadFile(diagramas.value[0]!.file, 'diagrams')
         }
 
         const uploadedPhotosPaths: string[] = []
         for (const foto of fotos.value) {
-            const url = await uploadFileToS3(foto.file, 'gallery')
+            const url = await uploadStore.uploadFile(foto.file, 'gallery')
             uploadedPhotosPaths.push(url)
         }
 
@@ -349,7 +356,7 @@ const submitForm = async () => {
         const response = await productStore.createProduct(payload)
 
         alert('Produto criado com sucesso!')
-        
+
         // Redireciona de volta para a listagem ou catálogo (opcional)
         // useRouter().push('/admin/products')
 
