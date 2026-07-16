@@ -204,7 +204,7 @@ const handleLogin = async () => {
 
         toast.success({
             title: 'Bem-vindo(a)!',
-            message: 'Sua conta foi criada com sucesso. Aproveite a loja!'
+            message: 'Você entrou na sua conta. Aproveite a loja!'
         });
 
         // Limpa os campos do formulário e fecha a modal de login
