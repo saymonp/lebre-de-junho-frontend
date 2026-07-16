@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
 
     // 2. Se estiver autenticado, mas NÃO for admin, redireciona para a Home ou página de erro
-    if (authStore.user?.roles.includes('admin')) {
+    if (authStore.user?.is_admin) {
         // Redireciona para a página inicial ou uma tela de "Não Autorizado"
         return navigateTo('/')
     }
