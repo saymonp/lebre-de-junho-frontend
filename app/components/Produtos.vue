@@ -14,10 +14,10 @@
       
       <!-- Botão para Cadastrar Novo Item -->
       <button 
-        @click="navigateTo('/dashboard/produtos/novo')"
+        @click="navigateTo('/admin/cadastrar-produto')"
         class="bg-black/40 text-center text-[#DBC695] kurale text-xs font-bold py-2 px-4 rounded-md border border-[#DBC695] outline-1 outline-[#DBC695] transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer shadow-md flex items-center gap-2 shrink-0"
       >
-        <span>＋</span> Tecer Novo Produto
+        <span>＋</span> Cadastrar Novo Produto
       </button>
     </div>
 
