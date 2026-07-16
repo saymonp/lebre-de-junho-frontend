@@ -2,7 +2,8 @@
     <div class="bg-[#120A18] min-h-screen text-white">
         <NavBar />
         <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto py-10 pb-20">
-            <h1 class="kurale text-2xl text-[#DBC695] mb-6">{{ isEditing ? 'Editar Produto' : 'Cadastrar Novo Produto' }}
+            <h1 class="kurale text-2xl text-[#DBC695] mb-6">{{ isEditing ? 'Editar Produto' : 'Cadastrar Novo Produto'
+                }}
             </h1>
 
             <form @submit.prevent="submitForm" class="w-full flex flex-col gap-5">
@@ -186,6 +187,13 @@ import { useProductStore } from '@/stores/product'
 import { useRoute } from '#app'
 import { useUploadStore } from '@/stores/uploads'
 
+interface FotoItem {
+    preview: string;     // URL da imagem (seja Blob temporário ou URL do S3)
+    file: File | null;   // Se for nova, guarda o arquivo. Se for antiga, fica null!
+}
+
+const fotos = ref<FotoItem[]>([])
+
 const uploadStore = useUploadStore()
 // Access the current route object
 const route = useRoute()
@@ -208,6 +216,7 @@ const categoriesInput = ref('')
 
 // Estado reativo principal do formulário
 const form = reactive({
+    id: null as number | null,
     name: '',
     description: '',
     price: null as number | null,
@@ -234,6 +243,15 @@ watch(() => productIdToEdit, async (newVal) => {
         if (productData.data.categories) {
             categoriesInput.value = productData.data.categories?.join(', ');
         }
+        if (productData.data.photos) {
+            productData.data.photos.map(p => fotos.value.push({ preview: p, file: null }))
+            if (productData.data.cover_photo_path) {
+                // Adiciona foto da capa no início do array
+                const cover_photo = productData.data.cover_photo_path
+                fotos.value.unshift({ preview: cover_photo, file: null })
+            }
+        }
+
     }
 }, { immediate: true });
 
@@ -249,13 +267,6 @@ const addMaterial = () => {
 const removeMaterial = (index: number) => {
     materiais.value.splice(index, 1)
 }
-
-// Interfaces e Controle de Fotos
-interface FotoUpload {
-    file: File
-    preview: string
-}
-const fotos = ref<FotoUpload[]>([])
 
 const handlePhotoUpload = (event: Event) => {
     const target = event.target as HTMLInputElement
@@ -314,10 +325,17 @@ const submitForm = async () => {
             diagramUrl = await uploadStore.uploadFile(diagramas.value[0]!.file, 'diagrams')
         }
 
-        const uploadedPhotosPaths: string[] = []
+        let uploadedPhotosPaths: string[] = []
         for (const foto of fotos.value) {
-            const url = await uploadStore.uploadFile(foto.file, 'gallery')
-            uploadedPhotosPaths.push(url)
+            if (foto.file) {
+                // foto nova adicionada
+                const url = await uploadStore.uploadFile(foto.file, 'gallery')
+                uploadedPhotosPaths.push(url)
+            }
+            else {
+                //foto antiga mantida
+                uploadedPhotosPaths.push(foto.preview)
+            }
         }
 
         // A primeira foto do array é definida como Capa
@@ -332,7 +350,7 @@ const submitForm = async () => {
             .map(c => c.trim())
             .filter(c => c !== '')
 
-        // 3. Monta a Payload de Envio baseada no seu SaveProductRequest
+        // 3. Monta a Payload de Envio baseada no SaveProductRequest
         const payload = {
             name: form.name,
             description: form.description,
@@ -352,13 +370,23 @@ const submitForm = async () => {
             diagram: diagramUrl
         }
 
-        // 4. Executa a action do Pinia que bate no Backend Laravel
-        const response = await productStore.createProduct(payload)
+        if (isEditing && form.id) {
+            // 4. Executa a action do Pinia que bate no Backend Laravel
+            const response = await productStore.updateProduct(form.id, payload)
 
-        alert('Produto criado com sucesso!')
+            alert('Produto atualizado com sucesso!')
 
-        // Redireciona de volta para a listagem ou catálogo (opcional)
-        // useRouter().push('/admin/products')
+            useRouter().push('/admin/dashboard')
+        }
+        else {
+            // 4. Executa a action do Pinia que bate no Backend Laravel
+            const response = await productStore.createProduct(payload)
+
+            alert('Produto criado com sucesso!')
+
+            useRouter().push('/admin/dashboard')
+        }
+
 
     } catch (error) {
         console.error('Erro ao salvar produto:', error)
