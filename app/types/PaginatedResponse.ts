@@ -1,4 +1,5 @@
 import type { Address } from './Addresses'; // Importe a interface que criamos anteriormente
+import type { Product } from './Products';
 
 // 1. Interface auxiliar para os links gerados pelo Laravel Paginator
 export interface PaginatorLink {
@@ -27,3 +28,4 @@ export interface PaginatedResponse<T> {
 
 // 3. Interface específica para a paginação de Endereços
 export type AddressPaginationResponse = PaginatedResponse<Address>;
+export type ProductPaginationResponse = PaginatedResponse<Product>;
