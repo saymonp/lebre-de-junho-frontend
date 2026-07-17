@@ -264,12 +264,22 @@ const removeMaterial = (index: number) => {
     materiais.value.splice(index, 1)
 }
 
-const handlePhotoUpload = (event: Event) => {
+const handlePhotoUpload = async (event: Event) => {
     const target = event.target as HTMLInputElement
     if (!target.files) return
 
     const filesArray = Array.from(target.files)
-    filesArray.forEach(file => {
+    const arquivosOtimizados = []
+    for (const file of filesArray) {
+        const novoArquivo = await optimizeImage(file, {
+            maxWidth: 900,
+            quality: 0.85,
+            format: 'image/webp'
+        })
+        arquivosOtimizados.push(novoArquivo)
+    }
+
+    arquivosOtimizados.forEach(file => {
         fotos.value.push({
             file,
             preview: URL.createObjectURL(file)
