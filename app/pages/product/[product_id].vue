@@ -75,9 +75,9 @@
           </li>
         </ul>
       </div>
-      <div>
+      <div v-if="produto?.diagram">
         <h2 class="kurale font-extrabold text-xl mt-5 mb-1">✨ Quer fazer em Casa? Enviamos o <span
-            class="uppercase">Diagrama (PDF)</span></h2>
+            class="uppercase">Diagrama (PDF)</span> para o seu email</h2>
         <p class="kurale text-2xl text-[#DBC695] font-extrabold">R$ 9,99</p>
         <button class="bg-black/40 text-center text-[#DBC695] kurale text-lg lg:text-xl text-shadow-lg mt-5 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
