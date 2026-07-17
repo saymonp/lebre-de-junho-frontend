@@ -85,20 +85,7 @@
           Adicionar ao Carrinho
         </button>
       </div>
-      <div>
-        <h2 class="kurale font-extrabold text-xl mt-7 mb-1">Calcular Frete</h2>
-        <div class="flex items-center gap-2 mt-2">
-          <input type="number" placeholder="CEP..."
-            class="border border-slate-700-medium text-heading text-sm rounded-xl focus:border-slate-700 block w-full px-3 py-2 shadow-xs placeholder:text-body">
-
-          <button class="bg-black/40 text-center text-[#DBC695] kurale text-lg lg:text-xl text-shadow-lg font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
-                transition-all duration-300
-                hover:scale-102 active:scale-97">
-            Calcular
-          </button>
-        </div>
-
-      </div>
+      <Shipping class="mt-10" :id="Number(productId)" :quantity="Number(1)"/>
     </section>
 
     <Footer />
@@ -111,6 +98,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from '#app'
+
 const route = useRoute()
 const productId = route.params.product_id
 const productStore = useProductStore()
