@@ -1,8 +1,9 @@
 <template>
   <div class="bg-black/40 border border-[#DBC695]/10 rounded-xl p-6 backdrop-blur-xs w-full">
-    
+
     <!-- Topo do Painel de Produtos -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#DBC695]/10 pb-4 mb-6">
+    <div
+      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#DBC695]/10 pb-4 mb-6">
       <div>
         <h2 class="kurale text-lg font-bold text-[#DBC695] tracking-wide flex items-center gap-2">
           Produtos
@@ -11,12 +12,10 @@
           Gerencie suas criações artesanais e disponibilidades de estoque.
         </p>
       </div>
-      
+
       <!-- Botão para Cadastrar Novo Item -->
-      <button 
-        @click="navigateTo('/admin/produto')"
-        class="bg-black/40 text-center text-[#DBC695] kurale text-xs font-bold py-2 px-4 rounded-md border border-[#DBC695] outline-1 outline-[#DBC695] transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer shadow-md flex items-center gap-2 shrink-0"
-      >
+      <button @click="navigateTo('/admin/produto')"
+        class="bg-black/40 text-center text-[#DBC695] kurale text-xs font-bold py-2 px-4 rounded-md border border-[#DBC695] outline-1 outline-[#DBC695] transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer shadow-md flex items-center gap-2 shrink-0">
         <span>＋</span> Cadastrar Novo Produto
       </button>
     </div>
@@ -33,16 +32,14 @@
             <th class="pb-3 pr-2 text-right">Ações</th>
           </tr>
         </thead>
-        
+
         <tbody class="divide-y divide-zinc-900 text-sm">
-          <tr 
-            v-for="(produto, index) in produtos?.data" 
-            :key="index"
-            class="hover:bg-white/[0.02] transition-colors group"
-          >
+          <tr v-for="(produto, index) in produtos?.data" :key="index"
+            class="hover:bg-white/[0.02] transition-colors group">
             <!-- 1. Miniatura Fallback -->
             <td class="py-3.5 pl-2">
-              <div class="w-10 h-10 bg-black/60 border border-[#DBC695]/20 rounded-lg flex items-center justify-center text-lg shadow-inner shrink-0">
+              <div
+                class="w-10 h-10 bg-black/60 border border-[#DBC695]/20 rounded-lg flex items-center justify-center text-lg shadow-inner shrink-0">
                 🧶
               </div>
             </td>
@@ -61,30 +58,23 @@
 
             <!-- 4. Status com Badge Dinâmico -->
             <td class="py-3.5">
-              <span 
-                class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border"
-                :class="produto.in_stock === true 
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-                  : 'bg-amber-500/10 border-amber-500/30 text-amber-400'"
-              >
+              <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" :class="produto.in_stock === true
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                : 'bg-amber-500/10 border-amber-500/30 text-amber-400'">
                 {{ produto.in_stock ? 'Pronta Entrega' : 'Sob Encomenda' }}
               </span>
             </td>
 
             <!-- 5. Ações Rápidas -->
             <td class="py-3.5 pr-2 text-right space-x-2">
-              <button 
-                @click="navigateTo(`/admin/produto/${produto.id}`)"
+              <button @click="navigateTo(`/admin/produto/${produto.id}`)"
                 class="text-xs text-zinc-400 hover:text-[#DBC695] transition-colors p-1 cursor-pointer"
-                title="Editar Produto"
-              >
+                title="Editar Produto">
                 ✏️
               </button>
-              <button 
-                @click="console.log('Remover:', produto.name)"
+              <button @click="handleDeleteProduct(produto)"
                 class="text-xs text-zinc-600 hover:text-red-400 transition-colors p-1 cursor-pointer"
-                title="Deletar Produto"
-              >
+                title="Deletar Produto">
                 🗑️
               </button>
             </td>
@@ -111,8 +101,15 @@ const {
 } = await useAsyncData('products-list', () => productStore.indexProducts());
 const produtos = computed(() => initialData.value);
 
-//const produtos = [
-//  { nome: 'Amigurumi Carot Bunny', valor: 'R$ 85,99', status: 'Pronta Entrega' },
-//  { nome: 'Amigurumi Espantalho Jack', valor: 'R$ 85,99', status: 'Sob Encomenda' }
-//];
+const handleDeleteProduct = async (produto: any) => {
+  if (!confirm('Deseja mesmo excluir este produto?')) return
+
+  try {
+    await productStore.deleteProduct(produto.id)
+
+    alert('Produto removido com sucesso!')
+  } catch (error) {
+    alert('Erro ao excluir o produto.')
+  }
+}
 </script>

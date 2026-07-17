@@ -3,7 +3,7 @@
         <NavBar />
         <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto py-10 pb-20">
             <h1 class="kurale text-2xl text-[#DBC695] mb-6">{{ isEditing ? 'Editar Produto' : 'Cadastrar Novo Produto'
-                }}
+            }}
             </h1>
 
             <form @submit.prevent="submitForm" class="w-full flex flex-col gap-5">
@@ -158,7 +158,7 @@
                                 CAPA
                             </span>
 
-                            <button @click.prevent="removePhoto(index)"
+                            <button @click.prevent="removePhoto(index, foto)"
                                 class="absolute top-0 right-0 bg-black/75 hover:bg-red-500 text-white transition-colors text-xs font-bold w-5 h-5 flex items-center justify-center rounded-bl-xl">
                                 ×
                             </button>
@@ -200,16 +200,12 @@ const route = useRoute()
 // Extract the 'id' parameter (matches the [id].vue filename)
 const productIdToEdit = route.params.id
 
-const toast = useToast();
 const productStore = useProductStore()
 
 const isEditing = computed(() => !!productIdToEdit);
 
 // Controle de Loading
 const loading = ref(false)
-
-// controle do upload de imagens
-const uploadingToS3 = ref(false)
 
 // String separada por vírgula que vamos explodir em array antes de enviar
 const categoriesInput = ref('')
@@ -282,7 +278,11 @@ const handlePhotoUpload = (event: Event) => {
     target.value = ''
 }
 
-const removePhoto = (index: number) => {
+const removePhoto = async (index: number, foto: FotoItem) => {
+    // Se for foto do S3
+    if (!foto.file) {
+        await uploadStore.deleteFileByUrl(foto.preview)
+    }
     if (fotos.value[index]) {
         URL.revokeObjectURL(fotos.value[index].preview)
         fotos.value.splice(index, 1)
