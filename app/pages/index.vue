@@ -41,18 +41,54 @@
       <p class="kurale text-center text-xl lg:text-2xl font-bold mt-5 mb-5">Conheça nossas peças exclusivas feitas à mão
       </p>
 
-      <div v-if="status === 'pending'" class="kurale text-sm animate-pulse text-[#DBC695]">
-        Carregando peças...
+      <!-- Bloco de Carregamento (Skeleton) - Exibido enquanto o status for 'pending' -->
+      <div v-if="status === 'pending'" class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+
+        <!-- Renderiza 6 cards fake estáticos para preencher a tela simulando o carregamento -->
+        <div v-for="n in 6" :key="n" class="flex flex-col animate-pulse">
+
+          <!-- Esqueleto da Imagem: Mantém rigidamente a proporção 2:3 do seu produto -->
+          <div class="bg-gray-800 aspect-[2/3] w-full rounded-sm"></div>
+
+          <!-- Esqueleto do Nome do Produto: Centralizado e com largura simulando texto -->
+          <div class="flex justify-center mt-3">
+            <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+          </div>
+
+          <!-- Esqueleto do Preço: Um bloco menor logo abaixo -->
+          <div class="flex justify-center mt-2">
+            <div class="h-4 bg-gray-800 rounded w-1/3"></div>
+          </div>
+
+        </div>
       </div>
 
+    
+
       <div v-else-if="status === 'error'" class="kurale text-sm text-red-500">
-        Houve um erro: {{ error?.message }}
+        <p class="kurale text-base text-center">Ops... Ocorreu um problema ao carregar os produtos, vamos resolver já!</p>
       </div>
       <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
 
         <div v-for="produto in produtos?.data" class="flex-col hover:scale-101 active:scale-99 cursor-pointer">
-          <NuxtLink :to="`product/${1}`">
-            <img class="border-[0.5px] outline-[#DBC695]" :src=produto.cover_photo_path! >
+          <NuxtLink :to="`product/${produto.id}`">
+            <img v-if="produto.cover_photo_path" class="border-[0.5px] outline-[#DBC695]" :src=produto.cover_photo_path
+            @error="(e) => { 
+          (e.target as HTMLImageElement).style.display = 'none';
+          const fallback = (e.target as HTMLImageElement).nextElementSibling;
+          if (fallback) fallback.classList.remove('hidden');
+        }">
+
+        <!-- ELEMENTO DE FALLBACK: Exibido se não houver foto OU se a imagem falhar ao carregar -->
+      <div 
+        :class="['w-full aspect-[2/3] bg-neutral-900 border-[0.5px] border-[#DBC695]/30 flex flex-col items-center justify-center gap-2 select-none', { 'hidden': produto.cover_photo_path }]"
+      >
+        <!-- Ícone minimalista de imagem usando SVG nativo -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#DBC695" class="w-8 h-8 opacity-60">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span class="kurale text-xs text-[#DBC695]/60">Sem imagem</span>
+      </div>
           </NuxtLink>
           <p class="kurale text-sm text-center mt-2">{{ produto.name }}</p>
           <p class="kurale text-sm text-center text-[#DBC695] ">R$ {{ produto.price }}</p>
