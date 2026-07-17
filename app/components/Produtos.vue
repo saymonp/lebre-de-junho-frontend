@@ -106,7 +106,7 @@ const handleDeleteProduct = async (produto: any) => {
 
   try {
     await productStore.deleteProduct(produto.id)
-
+    await refresh();
     alert('Produto removido com sucesso!')
   } catch (error) {
     alert('Erro ao excluir o produto.')
