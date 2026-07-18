@@ -3,7 +3,7 @@
         <NavBar />
         <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto py-10 pb-20">
             <h1 class="kurale text-2xl text-[#DBC695] mb-6">{{ isEditing ? 'Editar Produto' : 'Cadastrar Novo Produto'
-            }}
+                }}
             </h1>
 
             <form @submit.prevent="submitForm" class="w-full flex flex-col gap-5">
@@ -110,7 +110,7 @@
                     <div class="group">
                         <span
                             class="kurale text-sm text-zinc-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
-                            📜 {{ diagrama.file ? diagrama.file.name : diagrama.url  }}
+                            📜 {{ diagrama.file ? diagrama.file.name : diagrama.url }}
                             <button @click.prevent="removeDiagrama"
                                 class="text-red-400 hover:text-red-300 transition-colors ml-2 font-bold"
                                 title="Remover Diagrama">
@@ -193,13 +193,14 @@ interface FotoItem {
 }
 
 const fotos = ref<FotoItem[]>([])
-
+const fotosToDelete = ref<FotoItem[]>([])
 // Interfaces e Controle de Diagramas
 interface DiagramaUpload {
     file?: File
     url?: string
 }
 const diagrama = ref<DiagramaUpload>({})
+const diagramaToDelete = ref<DiagramaUpload>({})
 
 const uploadStore = useUploadStore()
 // Access the current route object
@@ -254,7 +255,7 @@ watch(() => productIdToEdit, async (newVal) => {
                 fotos.value.unshift({ preview: cover_photo, file: null })
             }
         }
-        if(productData.data.diagram){
+        if (productData.data.diagram) {
             diagrama.value.url = productData.data.diagram
         }
 
@@ -301,7 +302,8 @@ const handlePhotoUpload = async (event: Event) => {
 const removePhoto = async (index: number, foto: FotoItem) => {
     // Se for foto do S3
     if (!foto.file) {
-        await uploadStore.deleteFileByUrl(foto.preview)
+        fotosToDelete.value.push(foto)
+        // await uploadStore.deleteFileByUrl(foto.preview)
     }
     if (fotos.value[index]) {
         URL.revokeObjectURL(fotos.value[index].preview)
@@ -312,15 +314,21 @@ const removePhoto = async (index: number, foto: FotoItem) => {
 const handleUpload = (event: Event) => {
     const target = event.target as HTMLInputElement
     if (!target.files) return
+    if(diagrama.value.url){
+        // Diagrama antigo para deletar
+        diagramaToDelete.value = diagrama.value
+    }
 
     const filesArray = Array.from(target.files)
     filesArray.forEach(file => {
         diagrama.value.file = file
     })
     target.value = ''
+    
 }
 
 const removeDiagrama = () => {
+    diagramaToDelete.value = diagrama.value
     diagrama.value = {}
 }
 
@@ -349,7 +357,15 @@ const submitForm = async () => {
                 uploadedPhotosPaths.push(foto.preview)
             }
         }
-
+        for (const fotoDel of fotosToDelete.value) {
+            // Deleta fotos antigas do S3
+            await uploadStore.deleteFileByUrl(fotoDel.preview)
+        }
+        console.log(diagramaToDelete.value.url)
+        if (diagramaToDelete.value.url) {
+            // Deleta diagrama antigo
+            await uploadStore.deleteFileByUrl(diagramaToDelete.value.url)
+        }
         // A primeira foto do array é definida como Capa
         const coverPhotoPath = uploadedPhotosPaths.length > 0 ? uploadedPhotosPaths[0] : null
 
