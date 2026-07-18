@@ -58,10 +58,10 @@
 
             <!-- 4. Status com Badge Dinâmico -->
             <td class="py-3.5">
-              <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" :class="produto.in_stock === true
+              <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" :class="produto.stock > 0
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                 : 'bg-amber-500/10 border-amber-500/30 text-amber-400'">
-                {{ produto.in_stock ? 'Pronta Entrega' : 'Sob Encomenda' }}
+                {{ produto.stock > 0 ? 'Pronta Entrega' : 'Sob Encomenda' }}
               </span>
             </td>
 
