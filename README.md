@@ -8,7 +8,7 @@ Este é o repositório do frontend da **Lebre de Junho**, desenvolvido utilizand
 
 O design de interface, componentes e experiência do usuário (UX/UI) estão centralizados no Figma do projeto.
 
-🔗 **[Acessar Protótipo no Figma](https://www.figma.com/design/pMVWfYoWE9tg3wCVuQRZNm/Lebre-de-Junho?node-id=0-1&t=5K0eu4QVEUZwyldO-1)**
+**[Acessar Protótipo no Figma](https://www.figma.com/design/pMVWfYoWE9tg3wCVuQRZNm/Lebre-de-Junho?node-id=0-1&t=5K0eu4QVEUZwyldO-1)**
 
 ---
 
@@ -17,6 +17,17 @@ O design de interface, componentes e experiência do usuário (UX/UI) estão cen
 *   **Nuxt** - Framework SSR/SSG baseado em Vue
 *   **Tailwind CSS** - Estilização baseada em classes utilitárias
 *   **TypeScript** - Superset JavaScript para tipagem estática e segurança no código
+
+---
+
+## API / Backend
+
+O frontend se conecta a um ecossistema robusto de autenticação segura via tokens e integrações com serviços externos (como o MELHOR ENVIO).
+
+**[Acessar Repositório da API](https://github.com/saymonp/lebre-de-junho-api)**
+
+*   **Tecnologias do Backend:** Desenvolvido em **Laravel**, utilizando bancos de dados relacionais e controle de autenticação via API Tokens.
+*   **Comunicação:** O frontend consome os endpoints REST estruturados nessa API para alimentar as views reativas.
 
 ---
 
