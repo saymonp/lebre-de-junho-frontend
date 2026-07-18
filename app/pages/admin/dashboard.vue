@@ -1,10 +1,13 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'admin'
+})
+import { useAuthStore } from '@/stores/auth';
+const authStore = useAuthStore();
 const tabs = ['Encomendas', 'Gerenciar Produtos'];
 const activeTab = ref('Encomendas');
 
-const handleRedirectNewProduct = () => {
-    navigateTo('/admin/cadastrar-produto');
-}
+
 </script>
 <template>
     <div class="bg-[#120A18] min-h-screen text-white">
@@ -12,7 +15,7 @@ const handleRedirectNewProduct = () => {
         <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
             <header class="mt-5 flex items-baseline justify-between">
                 <h1 class="kurale font-extrabold text-4xl">Painel de Admnistrador</h1>
-                <p class="kurale text-2xl text-[#DBC695] font-extrabold">Olá Paula</p>
+                <p class="kurale text-2xl text-[#DBC695] font-extrabold">Olá {{ authStore.user?.name }}</p>
             </header>
 
             <div class="flex border-b border-white/10 mb-8 mt-8 overflow-x-auto">
@@ -36,13 +39,6 @@ const handleRedirectNewProduct = () => {
                 </div>
                 <div v-if="activeTab === 'Gerenciar Produtos'">
                     <Produtos />
-                    <div class="p-2 w-full mt-2">
-                        <button
-                        @click="handleRedirectNewProduct"
-                            class="w-full bg-black/40 text-center text-[#DBC695] kurale text-sm text-shadow-lg font-bold py-2 px-6 rounded-md border border-[#DBC695] outline-1 outline-[#DBC695] transition-all duration-300 hover:scale-102 active:scale-97 disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed">
-                            Cadastrar Novo Produto
-                        </button>
-                    </div>
                 </div>
             </div>
         </section>

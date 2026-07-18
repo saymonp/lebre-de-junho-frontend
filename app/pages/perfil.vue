@@ -55,7 +55,6 @@ const openEditModal = (address: Address) => {
 };
 
 const refreshAddressesList = async () => {
-  console.log("refresh");
   await refresh();
 };
 
@@ -104,6 +103,8 @@ const addressDelete = async (address: Address) => {
             {{ authStore.user?.name }}
           </h1>
           <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.email }}</p>
+          <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.roles.join(', ') }}</p>
+          <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.permissions.join(', ') }}</p>
         </div>
 
         <!-- Botão Sair -->

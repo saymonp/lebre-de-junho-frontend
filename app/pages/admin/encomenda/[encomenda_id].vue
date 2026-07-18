@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'admin' // Usa o arquivo middleware/admin.ts
+})
 import { ref, computed } from 'vue'
 
 // Simulação de dados vindos da rota do Nuxt (ex: /dashboard/encomendas/:id)

@@ -8,8 +8,21 @@
       <div
         class="lg:max-w-sm lg:mx-auto relative w-full aspect-[4/5] bg-[#120A18] rounded-t-full rounded-b-none border border-[#DBC695]/30 overflow-hidden shadow-xl">
         <img :src="activeImage" alt="Imagem do produto"
-          class="w-full h-full object-cover transition-all duration-500" />
-
+          class="w-full h-full object-cover transition-all duration-500" 
+          @error="(e) => { 
+          (e.target as HTMLImageElement).style.display = 'none';
+          const fallback = (e.target as HTMLImageElement).nextElementSibling;
+          if (fallback) fallback.classList.remove('hidden');
+        }"/>
+        <div 
+        :class="['w-full aspect-[2/3] bg-neutral-900 border-[0.5px] border-[#DBC695]/30 flex flex-col items-center justify-center gap-2 select-none', { 'hidden': activeImage }]"
+      >
+        <!-- Ícone minimalista de imagem usando SVG nativo -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#DBC695" class="w-8 h-8 opacity-60">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span class="kurale text-xs text-[#DBC695]/60">Sem imagem</span>
+      </div>
         <!-- Badge sutil de categoria ou destaque místico -->
         <span
           class="absolute top-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm text-[#DBC695] kurale text-xs px-3 py-1 rounded-full border border-[#DBC695]/20 tracking-wider">
@@ -19,28 +32,49 @@
 
       <!-- 2. Carrossel de Miniaturas Embaixo -->
       <div class="flex gap-3 mx-auto">
-        <button v-for="(img, index) in productImages" :key="index" @click="activeImage = img"
+        <button v-for="(img, index) in produto?.photos" :key="index" @click="activeImage = img"
           class="relative aspect-[4/5] bg-[#120A18] rounded-md overflow-hidden border transition-all duration-300 focus:outline-none"
           :class="activeImage === img ? 'border-[#DBC695] ring-1 ring-[#DBC695]' : 'border-gray-800 opacity-60 hover:opacity-100'">
-          <img :src="img" :alt="`Miniatura ${index + 1}`" class="w-full h-32 object-cover" />
+          <img :src="img" :alt="`Miniatura ${index + 1}`" class="w-full h-32 object-cover" 
+          @error="(e) => { 
+          (e.target as HTMLImageElement).style.display = 'none';
+          const fallback = (e.target as HTMLImageElement).nextElementSibling;
+          if (fallback) fallback.classList.remove('hidden');
+        }"/>
+        <div 
+        :class="['w-full aspect-[2/3] bg-neutral-900 border-[0.5px] border-[#DBC695]/30 flex flex-col items-center justify-center gap-2 select-none', { 'hidden': img }]"
+      >
+        <!-- Ícone minimalista de imagem usando SVG nativo -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#DBC695" class="w-8 h-8 opacity-60">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span class="kurale text-xs text-[#DBC695]/60">Sem imagem</span>
+      </div>
         </button>
       </div>
 
     </div>
 
 
+    <div v-if="status === 'pending'" class="kurale text-sm animate-pulse text-[#DBC695]">
+      Carregando peça...
+    </div>
 
-    <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
+    <div v-else-if="status === 'error'" class="kurale text-sm text-red-500">
+      Houve um erro: {{ error?.message }}
+    </div>
+    <section v-else class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
       <div class="flex flex-col space-y-2">
         <div class="flex justify-between items-center mt-7 mb-5">
-          <h2 class="kurale font-extrabold text-4xl ">Carrot Bunny</h2>
-          <IconShare class="w-8 h-8 cursor-pointer"/>
+          <h2 class="kurale font-extrabold text-4xl ">{{ produto?.name }}</h2>
+          <IconShare class="w-8 h-8 cursor-pointer" />
         </div>
         <div class="flex gap-3 items-center">
-          <p class="kurale text-xl text-[#DBC695] line-through">R$ 89,99</p>
-          <p class="kurale text-2xl text-[#DBC695] font-extrabold">R$ 76,50</p>
+          <p class="kurale text-xl text-[#DBC695] line-through">R$ {{ produto?.price }}</p>
+          <p class="kurale text-2xl text-[#DBC695] font-extrabold">R$ {{ produto?.promotional_price }}</p>
         </div>
-        <p class="kurale text-lg capitalize">15% de desconto no pix</p>
+        <p v-if="produto?.discount_pix && produto?.discount_pix > 0" class="kurale text-lg capitalize">{{
+          produto?.discount_pix }}% de desconto no pix</p>
 
         <button class="bg-black/40 text-center text-[#DBC695] kurale text-lg lg:text-xl text-shadow-lg mt-5 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
@@ -50,30 +84,27 @@
       </div>
       <div class="flex flex-col">
         <h2 class="kurale font-extrabold text-2xl mt-5 mb-1">Nota da Criadora</h2>
-        <p class="kurale text-2sm">Tecido ponto a ponto, o Carot Bunny é muito mais do que um amigurumi comum, ele é um
-          amuleto de afeto e
-          presença.
+        <p class="kurale text-2sm">{{ produto?.description }}
         </p>
       </div>
       <div>
-        <h2 @click="showMore = !showMore" class="kurale font-extrabold text-xl mt-5 mb-1 cursor-pointer">Dimensões e Materiais {{ showMore ? '▲' : '▼' }}</h2>
+        <h2 @click="showMore = !showMore" class="kurale font-extrabold text-xl mt-5 mb-1 cursor-pointer">Dimensões e
+          Materiais {{ showMore ? '▲' : '▼' }}</h2>
         <ul v-if="showMore" class="list-disc">
           <li>
-            <p class="kurale text-2sm">Altura: 18 cm (da ponta das orelhas até a base)</p>
+            <p class="kurale text-2sm">Altura: {{ produto?.height }}</p>
           </li>
           <li>
-            <p class="kurale text-2sm">Largura: 10 cm</p>
+            <p class="kurale text-2sm">Largura: {{ produto?.width }}</p>
           </li>
           <li>
-            <p class="kurale text-2sm">Material: Fio 100% algodão hipoalergênico, enchimento de fibra siliconada macia e
-              olhos de segurança com
-              trava.</p>
+            <p v-for="m in produto?.materials" class="kurale text-2sm">{{ m }}</p>
           </li>
         </ul>
       </div>
-      <div>
+      <div v-if="produto?.diagram">
         <h2 class="kurale font-extrabold text-xl mt-5 mb-1">✨ Quer fazer em Casa? Enviamos o <span
-            class="uppercase">Diagrama (PDF)</span></h2>
+            class="uppercase">Diagrama (PDF)</span> para o seu email</h2>
         <p class="kurale text-2xl text-[#DBC695] font-extrabold">R$ 9,99</p>
         <button class="bg-black/40 text-center text-[#DBC695] kurale text-lg lg:text-xl text-shadow-lg mt-5 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
@@ -81,20 +112,7 @@
           Adicionar ao Carrinho
         </button>
       </div>
-      <div>
-        <h2 class="kurale font-extrabold text-xl mt-7 mb-1">Calcular Frete</h2>
-        <div class="flex items-center gap-2 mt-2">
-          <input type="number" placeholder="CEP..."
-            class="border border-slate-700-medium text-heading text-sm rounded-xl focus:border-slate-700 block w-full px-3 py-2 shadow-xs placeholder:text-body">
-          
-            <button class="bg-black/40 text-center text-[#DBC695] kurale text-lg lg:text-xl text-shadow-lg font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
-                transition-all duration-300
-                hover:scale-102 active:scale-97">
-            Calcular
-          </button>
-        </div>
-
-      </div>
+      <Shipping class="mt-10" :id="Number(productId)" :quantity="Number(1)"/>
     </section>
 
     <Footer />
@@ -106,16 +124,48 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from '#app'
+
+const route = useRoute()
+const productId = route.params.product_id
+const productStore = useProductStore()
+
+const {
+  data: initialData,
+  status,
+  error,
+  refresh
+} = await useAsyncData('product', () => productStore.showProduct(Number(productId)));
+
+const produto = computed(() => {
+  const produto = initialData.value?.data;
+  if (!produto) return null;
+
+  // Criamos uma nova lista combinando a foto de capa com as fotos existentes
+  const photos = produto.cover_photo_path
+    ? [produto.cover_photo_path, ...(produto.photos || [])]
+    : [...(produto.photos || [])];
+
+  return {
+    ...produto,
+    photos
+  };
+});
 
 // Array simulando as fotos que virão da sua API do Laravel (ex: g1.jpg, g2.jpg, cristais.jpg)
-const productImages = ref([
+const productImages1 = ref([
   '/coelho.avif',
   '/coelho1.avif',
   '/coelho2.avif'
 ])
-
+console.log(produto.value?.photos)
 // Define a primeira imagem da lista como a ativa por padrão
-const activeImage = ref(productImages.value[0])
+const activeImage = ref(produto.value?.photos[0])
 
 const showMore = ref(false)
+
+
+
+
+
 </script>

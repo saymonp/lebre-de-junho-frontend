@@ -1,7 +1,7 @@
 <template>
   <!--NavBar-->
   <div class="bg-[#120A18] min-h-screen text-white">
-    <NavBar v-model:isCriarConta="isCriarConta"/>
+    <NavBar v-model:isCriarConta="isCriarConta" />
 
     <div>
       <div class="relative flex justify-center items-center w-full aspect-[4/5] md:aspect-video bg-[#150522]">
@@ -17,7 +17,8 @@
             Lebre de Junho
           </div>
           <div class="text-center text-[#DBC695] px-2 mt-5 kurale text-xl lg:text-2xl text-shadow-lg">
-            {{ authStore.isAuthenticated ? 'Veja Nossos Produtos em Destaque' : 'Crie sua Conta para garantir Descontos' }}
+            {{ authStore.isAuthenticated ? 'Veja Nossos Produtos em Destaque' : 'Crie sua Conta para garantir Descontos'
+            }}
           </div>
           <div class="p-2">
             <button v-if="authStore.isAuthenticated" @click="isCriarConta = !isCriarConta" class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
@@ -40,34 +41,58 @@
       <p class="kurale text-center text-xl lg:text-2xl font-bold mt-5 mb-5">Conheça nossas peças exclusivas feitas à mão
       </p>
 
-      <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+      <!-- Bloco de Carregamento (Skeleton) - Exibido enquanto o status for 'pending' -->
+      <div v-if="status === 'pending'" class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
 
-        <div class="flex-col hover:scale-101 active:scale-99 cursor-pointer">
-          <NuxtLink :to="`product/${1}`">
-          <img class="border-[0.5px] outline-[#DBC695]" src="/coelho.avif">
+        <!-- Renderiza 6 cards fake estáticos para preencher a tela simulando o carregamento -->
+        <div v-for="n in 6" :key="n" class="flex flex-col animate-pulse">
+
+          <!-- Esqueleto da Imagem: Mantém rigidamente a proporção 2:3 do seu produto -->
+          <div class="bg-gray-800 aspect-[2/3] w-full rounded-sm"></div>
+
+          <!-- Esqueleto do Nome do Produto: Centralizado e com largura simulando texto -->
+          <div class="flex justify-center mt-3">
+            <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+          </div>
+
+          <!-- Esqueleto do Preço: Um bloco menor logo abaixo -->
+          <div class="flex justify-center mt-2">
+            <div class="h-4 bg-gray-800 rounded w-1/3"></div>
+          </div>
+
+        </div>
+      </div>
+
+    
+
+      <div v-else-if="status === 'error'" class="kurale text-sm text-red-500">
+        <p class="kurale text-base text-center">Ops... Ocorreu um problema ao carregar os produtos, vamos resolver já!</p>
+      </div>
+      <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+
+        <div v-for="produto in produtos?.data" class="flex-col hover:scale-101 active:scale-99 cursor-pointer">
+          <NuxtLink :to="`product/${produto.id}`">
+            <img v-if="produto.cover_photo_path" class="border-[0.5px] outline-[#DBC695]" :src=produto.cover_photo_path
+            @error="(e) => { 
+          (e.target as HTMLImageElement).style.display = 'none';
+          const fallback = (e.target as HTMLImageElement).nextElementSibling;
+          if (fallback) fallback.classList.remove('hidden');
+        }">
+
+        <!-- ELEMENTO DE FALLBACK: Exibido se não houver foto OU se a imagem falhar ao carregar -->
+      <div 
+        :class="['w-full aspect-[2/3] bg-neutral-900 border-[0.5px] border-[#DBC695]/30 flex flex-col items-center justify-center gap-2 select-none', { 'hidden': produto.cover_photo_path }]"
+      >
+        <!-- Ícone minimalista de imagem usando SVG nativo -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#DBC695" class="w-8 h-8 opacity-60">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span class="kurale text-xs text-[#DBC695]/60">Sem imagem</span>
+      </div>
           </NuxtLink>
-          <p class="kurale text-sm text-center mt-2">Carrot Rabit</p>
-          <p class="kurale text-sm text-center text-[#DBC695] ">R$ 89,99</p>
+          <p class="kurale text-sm text-center mt-2">{{ produto.name }}</p>
+          <p class="kurale text-sm text-center text-[#DBC695] ">R$ {{ produto.price }}</p>
         </div>
-
-        <div class="flex-col hover:scale-101 active:scale-99 cursor-pointer">
-          <img class="border-[0.5px] outline-[#DBC695]" src="/espantalho.avif">
-          <p class="kurale text-sm text-center mt-2">Jack Espantalho</p>
-          <p class="kurale text-sm text-center text-[#DBC695] ">R$ 99,99</p>
-        </div>
-
-        <div class="flex-col hover:scale-101 active:scale-99 cursor-pointer">
-          <img class="border-[0.5px] outline-[#DBC695]" src="/espantalho.avif">
-          <p class="kurale text-sm text-center mt-2">Jack Espantalho</p>
-          <p class="kurale text-sm text-center text-[#DBC695] ">R$ 99,99</p>
-        </div>
-
-        <div class="flex-col hover:scale-101 active:scale-99 cursor-pointer">
-          <img class="border-[0.5px] outline-[#DBC695]" src="/coelho.avif">
-          <p class="kurale text-sm text-center mt-2">Carrot Rabit</p>
-          <p class="kurale text-sm text-center text-[#DBC695] ">R$ 89,99</p>
-        </div>
-
 
       </div>
     </section>
@@ -103,7 +128,8 @@
     <section class="lg:max-w-3xl max-sm:max-w-xs mx-auto">
       <div class="flex gap-2 justify-center lg:justify-around">
 
-        <div class="relative overflow-hidden rounded-lg border border-[#DBC695]/30 hover:scale-101 active:scale-99 cursor-pointer">
+        <div
+          class="relative overflow-hidden rounded-lg border border-[#DBC695]/30 hover:scale-101 active:scale-99 cursor-pointer">
 
           <img class="object-cover opacity-90 w-full h-50" src="/cristais.jpg" alt="cristais">
 
@@ -119,7 +145,8 @@
 
         </div>
 
-        <div class="relative overflow-hidden rounded-lg border border-[#DBC695]/30 hover:scale-101 active:scale-99 cursor-pointer">
+        <div
+          class="relative overflow-hidden rounded-lg border border-[#DBC695]/30 hover:scale-101 active:scale-99 cursor-pointer">
           <img class="w-full h-50 object-cover rounded-lg" src="/velas2.jpg" alt="velas">
           <div
             class="absolute inset-0 m-auto w-4/5 h-20 bg-black/60 backdrop-blur-sm flex flex-col justify-center items-center rounded border border-[#DBC695]/20 p-1">
@@ -133,44 +160,53 @@
         </div>
       </div>
     </section>
-<footer class="w-full bg-[#0a050f] border-t border-[#DBC695]/20 py-8 mt-12">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+    <footer class="w-full bg-[#0a050f] border-t border-[#DBC695]/20 py-8 mt-12">
+      <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
 
-      <div class="flex flex-col items-center md:items-start text-center md:text-left">
-        <span class="mystery-quest text-xl text-white tracking-wider">
-          Lebre de Junho
-        </span>
-        <p class="kurale text-xs text-gray-500 mt-1">
-          © 2026 Todos os direitos reservados.
-        </p>
-      </div>
+        <div class="flex flex-col items-center md:items-start text-center md:text-left">
+          <span class="mystery-quest text-xl text-white tracking-wider">
+            Lebre de Junho
+          </span>
+          <p class="kurale text-xs text-gray-500 mt-1">
+            © 2026 Todos os direitos reservados.
+          </p>
+        </div>
 
-      <div class="flex flex-col items-center md:items-end gap-2 text-sm">
-        <a href="https://instagram.com/lebredejunho" target="_blank" rel="noopener noreferrer"
-          class="kurale text-[#DBC695] hover:text-white transition-colors duration-300 flex items-center gap-1 group">
-          <span>@lebredejunho</span>
-          <span class="inline-block transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-        </a>
-
-        <p class="kurale text-xs text-gray-400">
-          Desenvolvido por
-          <a href="mailto:contact@saymontrevisan.dev"
-            class="text-white hover:text-[#DBC695] underline underline-offset-4 decoration-[#DBC695]/40 hover:decoration-[#DBC695] transition-colors duration-300">
-            Saymon
+        <div class="flex flex-col items-center md:items-end gap-2 text-sm">
+          <a href="https://instagram.com/lebredejunho" target="_blank" rel="noopener noreferrer"
+            class="kurale text-[#DBC695] hover:text-white transition-colors duration-300 flex items-center gap-1 group">
+            <span>@lebredejunho</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-0.5">→</span>
           </a>
-        </p>
-      </div>
 
-    </div>
-  </footer>
+          <p class="kurale text-xs text-gray-400">
+            Desenvolvido por
+            <a href="mailto:contact@saymontrevisan.dev"
+              class="text-white hover:text-[#DBC695] underline underline-offset-4 decoration-[#DBC695]/40 hover:decoration-[#DBC695] transition-colors duration-300">
+              Saymon
+            </a>
+          </p>
+        </div>
+
+      </div>
+    </footer>
   </div>
-  
+
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
 
+const productStore = useProductStore()
 const isCriarConta = ref(false);
 
 const authStore = useAuthStore();
+
+const {
+  data: initialData,
+  status,
+  error,
+  refresh
+} = await useAsyncData('products-list', () => productStore.indexProducts());
+const produtos = computed(() => initialData.value);
 </script>
