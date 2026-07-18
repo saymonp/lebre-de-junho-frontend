@@ -25,7 +25,7 @@
                 <li v-if="authStore.user?.roles.includes('admin')">
                     <RouterLink to="/admin/dashboard"
                         class="block cursor-pointer p-2.5 text-white no-underline ml-2.5 hover:text-[#DBC695]">
-                        <a class="font-bold text-zinc-100">Administrador</a>
+                        <a class="kurale font-bold text-zinc-100">Administrador</a>
                     </RouterLink>
                 </li>
                 </div>
