@@ -8,8 +8,21 @@
       <div
         class="lg:max-w-sm lg:mx-auto relative w-full aspect-[4/5] bg-[#120A18] rounded-t-full rounded-b-none border border-[#DBC695]/30 overflow-hidden shadow-xl">
         <img :src="activeImage" alt="Imagem do produto"
-          class="w-full h-full object-cover transition-all duration-500" />
-
+          class="w-full h-full object-cover transition-all duration-500" 
+          @error="(e) => { 
+          (e.target as HTMLImageElement).style.display = 'none';
+          const fallback = (e.target as HTMLImageElement).nextElementSibling;
+          if (fallback) fallback.classList.remove('hidden');
+        }"/>
+        <div 
+        :class="['w-full aspect-[2/3] bg-neutral-900 border-[0.5px] border-[#DBC695]/30 flex flex-col items-center justify-center gap-2 select-none', { 'hidden': activeImage }]"
+      >
+        <!-- Ícone minimalista de imagem usando SVG nativo -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#DBC695" class="w-8 h-8 opacity-60">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span class="kurale text-xs text-[#DBC695]/60">Sem imagem</span>
+      </div>
         <!-- Badge sutil de categoria ou destaque místico -->
         <span
           class="absolute top-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm text-[#DBC695] kurale text-xs px-3 py-1 rounded-full border border-[#DBC695]/20 tracking-wider">
@@ -22,7 +35,21 @@
         <button v-for="(img, index) in produto?.photos" :key="index" @click="activeImage = img"
           class="relative aspect-[4/5] bg-[#120A18] rounded-md overflow-hidden border transition-all duration-300 focus:outline-none"
           :class="activeImage === img ? 'border-[#DBC695] ring-1 ring-[#DBC695]' : 'border-gray-800 opacity-60 hover:opacity-100'">
-          <img :src="img" :alt="`Miniatura ${index + 1}`" class="w-full h-32 object-cover" />
+          <img :src="img" :alt="`Miniatura ${index + 1}`" class="w-full h-32 object-cover" 
+          @error="(e) => { 
+          (e.target as HTMLImageElement).style.display = 'none';
+          const fallback = (e.target as HTMLImageElement).nextElementSibling;
+          if (fallback) fallback.classList.remove('hidden');
+        }"/>
+        <div 
+        :class="['w-full aspect-[2/3] bg-neutral-900 border-[0.5px] border-[#DBC695]/30 flex flex-col items-center justify-center gap-2 select-none', { 'hidden': img }]"
+      >
+        <!-- Ícone minimalista de imagem usando SVG nativo -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#DBC695" class="w-8 h-8 opacity-60">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span class="kurale text-xs text-[#DBC695]/60">Sem imagem</span>
+      </div>
         </button>
       </div>
 
