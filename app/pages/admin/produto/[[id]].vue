@@ -106,12 +106,12 @@
                     </label>
                 </div>
 
-                <div v-if="diagramas.length > 0" class="flex flex-wrap gap-3 p-1">
-                    <div v-for="(d, index) in diagramas" :key="index" class="group">
+                <div v-if="diagrama && (diagrama.file || diagrama.url)" class="flex flex-wrap gap-3 p-1">
+                    <div class="group">
                         <span
                             class="kurale text-sm text-zinc-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
-                            📜 {{ d.file.name }}
-                            <button @click.prevent="removeDiagrama(index)"
+                            📜 {{ diagrama.file ? diagrama.file.name : diagrama.url  }}
+                            <button @click.prevent="removeDiagrama"
                                 class="text-red-400 hover:text-red-300 transition-colors ml-2 font-bold"
                                 title="Remover Diagrama">
                                 ×
@@ -194,6 +194,13 @@ interface FotoItem {
 
 const fotos = ref<FotoItem[]>([])
 
+// Interfaces e Controle de Diagramas
+interface DiagramaUpload {
+    file?: File
+    url?: string
+}
+const diagrama = ref<DiagramaUpload>({})
+
 const uploadStore = useUploadStore()
 // Access the current route object
 const route = useRoute()
@@ -247,6 +254,9 @@ watch(() => productIdToEdit, async (newVal) => {
                 fotos.value.unshift({ preview: cover_photo, file: null })
             }
         }
+        if(productData.data.diagram){
+            diagrama.value.url = productData.data.diagram
+        }
 
     }
 }, { immediate: true });
@@ -299,27 +309,19 @@ const removePhoto = async (index: number, foto: FotoItem) => {
     }
 }
 
-// Interfaces e Controle de Diagramas
-interface DiagramaUpload {
-    file: File
-}
-const diagramas = ref<DiagramaUpload[]>([])
-
 const handleUpload = (event: Event) => {
     const target = event.target as HTMLInputElement
     if (!target.files) return
 
     const filesArray = Array.from(target.files)
     filesArray.forEach(file => {
-        diagramas.value.push({ file })
+        diagrama.value.file = file
     })
     target.value = ''
 }
 
-const removeDiagrama = (index: number) => {
-    if (diagramas.value[index]) {
-        diagramas.value.splice(index, 1)
-    }
+const removeDiagrama = () => {
+    diagrama.value = {}
 }
 
 /**
@@ -331,8 +333,8 @@ const submitForm = async () => {
 
         // 1. Processamento e Upload dos Arquivos (S3)
         let diagramUrl: string | null = null
-        if (diagramas.value.length > 0) {
-            diagramUrl = await uploadStore.uploadFile(diagramas.value[0]!.file, 'diagrams')
+        if (diagrama.value.file) {
+            diagramUrl = await uploadStore.uploadFile(diagrama.value.file, 'diagrams')
         }
 
         let uploadedPhotosPaths: string[] = []
