@@ -54,7 +54,7 @@ export const useUploadStore = defineStore('uploads', () => {
         try {
             // 1. Solicita a URL assinada de deleção para o backend do Laravel
             // (Ajuste o endpoint `/api/uploads/presigned-delete` conforme sua api)
-            const { delete_url } = await $fetch<{ delete_url: string }>('/products/uploads/presigned-delete', {
+            const { delete_url } = await $api<{ delete_url: string }>('/products/uploads/presigned-delete', {
                 method: 'POST',
                 body: { file_url: fileUrl }
             })
