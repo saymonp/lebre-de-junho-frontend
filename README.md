@@ -1,6 +1,34 @@
-# Nuxt Minimal Starter
+# 🐇 Lebre de Junho - Frontend
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Este é o repositório do frontend da **Lebre de Junho**, desenvolvido utilizando **Nuxt** e **Tailwind CSS**. A aplicação consome a [API](https://github.com/saymonp/lebre-de-junho-api) do ecossistema para gerenciamento e exibição do catálogo, painéis administrativos e dashboards.
+
+---
+
+## Design & Prototipagem
+
+O design de interface, componentes e experiência do usuário (UX/UI) estão centralizados no Figma do projeto.
+
+🔗 **[Acessar Protótipo no Figma](https://www.figma.com/design/pMVWfYoWE9tg3wCVuQRZNm/Lebre-de-Junho?node-id=0-1&t=5K0eu4QVEUZwyldO-1)**
+
+---
+
+## Tecnologias Utilizadas
+
+*   **Nuxt** - Framework SSR/SSG baseado em Vue
+*   **Tailwind CSS** - Estilização baseada em classes utilitárias
+*   **TypeScript** - Superset JavaScript para tipagem estática e segurança no código
+
+---
+
+## Instalação e Execução
+
+Certifique-se de ter o **Node.js** instalado em sua máquina.
+
+### 1. Clonar o repositório e instalar as dependências
+```bash
+git clone [https://github.com/seu-usuario/lebre-de-junho-frontend.git](https://github.com/seu-usuario/lebre-de-junho-frontend.git)
+cd lebre-de-junho-frontend
+npm install
 
 ## Setup
 
