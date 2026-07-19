@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth' // Mantendo o padrão da sua store
+import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -15,18 +15,15 @@ const formData = reactive({
 })
 
 onMounted(async () => {
-  // Captura os parâmetros da URL nativamente no Nuxt 3
   formData.email = route.query.email as string || ''
   formData.token = route.query.token as string || ''
 
-  // Se vier sem token ou email na URL, barra imediatamente
   if (!formData.token || !formData.email) {
     isLoading.value = false
     errorMsgLocal.value = 'Link de validação inválido, corrompido ou incompleto.'
     return
   }
 
-  // Dispara a validação automática assim que a página carrega
   try {
     await authStore.verifyEmail({
       email: formData.email,
@@ -35,7 +32,6 @@ onMounted(async () => {
 
     sucesso.value = true
 
-    // Redireciona o usuário para o perfil ou dashboard após 3 segundos de sucesso
     setTimeout(() => {
       navigateTo('/perfil')
     }, 3000)
@@ -61,7 +57,7 @@ onMounted(async () => {
         
         <!-- Ícone Temático Central Dinâmico -->
         <div class="w-12 h-12 rounded-full bg-black/40 border border-[#DBC695]/30 flex items-center justify-center mb-1">
-          <span v-if="isLoading" class="text-[#DBC695] text-xl animate-spin">⏳</span>
+          <span v-if="isLoading" class="text-[#DBC695] text-xl animate-spin block">⏳</span>
           <span v-else-if="sucesso" class="text-[#DBC695] text-xl">✨</span>
           <span v-else class="text-red-400 text-xl">❌</span>
         </div>
@@ -71,7 +67,7 @@ onMounted(async () => {
         </h2>
 
         <!-- ESTADO 1: Carregando / Processando -->
-        <template v-slot:[`loading`] v-if="isLoading">
+        <template v-if="isLoading">
           <p class="kurale text-zinc-300 text-center text-sm leading-relaxed mb-2">
             Estamos lendo os pergaminhos e confirmando a autenticidade da sua conta. Aguarde um instante...
           </p>
@@ -81,7 +77,7 @@ onMounted(async () => {
         </template>
 
         <!-- ESTADO 2: Sucesso e Redirecionamento -->
-        <template v-if="sucesso">
+        <template v-else-if="sucesso">
           <div class="p-4 rounded-lg bg-[#DBC695]/10 border border-[#DBC695]/30 text-center my-2 w-full">
             <p class="kurale text-[#DBC695] font-bold text-sm mb-2">Sua conta está ativa!</p>
             <p class="kurale text-zinc-300 text-xs leading-relaxed">
@@ -90,7 +86,7 @@ onMounted(async () => {
           </div>
 
           <p class="kurale text-[#DBC695] text-[11px] uppercase tracking-wider animate-pulse mt-2">
-            Preparando seu espaço místico...
+            Preparando seu espaço...
           </p>
         </template>
 
@@ -102,7 +98,7 @@ onMounted(async () => {
 
           <div class="p-2 w-full mt-2">
             <button 
-              @click="navigateTo('/login')" 
+              @click="navigateTo('/')" 
               class="w-full bg-black/40 text-center text-[#DBC695] kurale text-sm text-shadow-lg font-bold py-2 px-6 rounded-md border border-[#DBC695] outline-1 outline-[#DBC695] transition-all duration-300 hover:scale-102 active:scale-97"
             >
               Voltar para o Login
