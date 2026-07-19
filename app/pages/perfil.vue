@@ -77,6 +77,21 @@ const addressDelete = async (address: Address) => {
   }
 }
 
+const handleEmailVerify = async () => {
+  try {
+    isLoading.value = true;
+    await authStore.sendEmailToVerify()
+    toast.success({ title: 'Sucesso', message: 'Verifique sua caixa de entrada para confirmar seu e-mail' });
+  }
+  catch (error: any) {
+    const errorMessage = error.data?.message || 'Ocorreu ao enviar o email';
+    toast.error({ title: 'Erro', message: errorMessage });
+  } finally {
+    isLoading.value = false;
+  }
+  
+}
+
 </script>
 
 <template>
@@ -103,10 +118,19 @@ const addressDelete = async (address: Address) => {
             {{ authStore.user?.name }}
           </h1>
           <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.email }}</p>
-          <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.roles.join(', ') }}</p>
-          <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.permissions.join(', ') }}</p>
+          <div v-if="authStore.user?.roles.includes('admin')">
+            <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.roles.join(', ') }}</p>
+            <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.permissions.join(', ') }}</p>
+          </div>
         </div>
-
+        <div v-if="!authStore.user?.email_verified_at" class="flex flex-col mr-5">
+          <p class="kurale text-base font-extrabold">Seu Email ainda precisa ser Verificado</p>
+          <button @click="handleEmailVerify"
+          :disabled="isLoading"
+            class="disabled:cursor-not-allowed kurale mt-2 text-2xs border border-zinc-200 hover:border-[#f8dc9b] hover:[#DBC695] px-3 py-1.5 rounded-lg transition-colors cursor-pointer">
+            {{ isLoading ? 'Enviando Email' : 'Enviar Email de Verificação' }}
+          </button>
+        </div>
         <!-- Botão Sair -->
         <button @click="handleLogout"
           class="kurale text-xs border border-zinc-700 hover:border-red-400/50 hover:text-red-400 px-3 py-1.5 rounded-lg transition-colors cursor-pointer">
