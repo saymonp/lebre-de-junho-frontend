@@ -108,6 +108,9 @@
                     <a href="/privacidade" target="_blank" class="text-[#DBC695] hover:underline font-bold text-sm">Política
                         de Privacidade</a></p>
         <div class="p-2">
+            <button @click="$router.push('/recuperar-senha')" class="kurale mt-2 text-xs text-zinc-300 hover:text-white flex items-center gap-2">
+                Esqueceu a senha?
+            </button>
             <button class="bg-black/40 text-center text-[#DBC695] kurale text-sm lg:text-xl text-shadow-lg mt-6 font-bold py-1 px-5 lg:py-2 lg:px-6 rounded-md border outline-1 outline-[#DBC695]
                 transition-all duration-300
                 hover:scale-102 active:scale-97"
