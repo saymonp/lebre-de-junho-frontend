@@ -82,7 +82,7 @@ export const useAuthStore = defineStore('auth', {
     async redefinirSenha(data: { email: string, token: string, new_password: string }) {
       const { $api } = useNuxtApp()
       const response = await $api<any>('/reset-password', { body: data, method: 'POST' });
-      this.setUser(response.data.user, response.data.access_token);
+      this.setUser(response.user, response.access_token);
     },
     async verifyEmail(data: { email: string, token: string }) {
       const { $api } = useNuxtApp()
