@@ -36,11 +36,15 @@ export const useAuthStore = defineStore('auth', {
       this.setUser(response.user, response.access_token);
       return response;
     },
-    async register(credentials: RegisterRequest): Promise<LoginResponse> 
-    {
+    async register(credentials: RegisterRequest): Promise<LoginResponse> {
       const { $api } = useNuxtApp()
       const response = await $api<LoginResponse>('/register', { body: credentials, method: 'POST' });
       this.setUser(response.user, response.access_token);
+      return response;
+    },
+    async sendEmailToVerify(): Promise<{ message: string }> {
+      const { $api } = useNuxtApp()
+      const response = await $api<{ message: string }>('/send-email-verify', { method: 'POST' });
       return response;
     },
     async logout() {
