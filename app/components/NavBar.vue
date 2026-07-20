@@ -232,16 +232,27 @@ const handleLogin = async () => {
 
 // Redirecionamento para o OAuth do Google
 const loginWithGoogle = () => {
-    if (!registerData.value.aceitou_termos) {
+    if (!isLogin.value && !registerData.value.aceitou_termos) {
         toast.info({
             title: 'Incompleto',
             message: 'Você precisa aceitar os Termos de Uso e Política de Privacidade para continuar.'
         });
         return;
     }
-    // Redireciona diretamente o navegador do usuário para a rota do Laravel que inicia o Socialite
-    const config = useRuntimeConfig();
-    window.location.href = `${config.public.apiBase.replace(/\/api\/?$/, '')}/web/auth/google`;
+
+    const baseUrl = import.meta.env.VITE_GOOGLE_AUTH_URL;
+
+    const params = new URLSearchParams({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
+        response_type: 'code', // Indica que o backend vai receber um Authorization Code
+        scope: 'openid email profile', // Dados mínimos (LGPD ok)
+        access_type: 'offline', // Opcional: se precisar de refresh_token
+        prompt: 'select_account' // Força o Google a mostrar a tela de escolher conta
+    });
+    // Redireciona para: https://accounts.google.com/o/oauth2/v2/auth?client_id=...
+    window.location.href = `${baseUrl}?${params.toString()}`;
+
 };
 
 const handleLogout = async () => {
