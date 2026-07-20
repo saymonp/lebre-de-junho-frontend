@@ -241,7 +241,7 @@ const loginWithGoogle = () => {
     }
     // Redireciona diretamente o navegador do usuário para a rota do Laravel que inicia o Socialite
     const config = useRuntimeConfig();
-    window.location.href = `${config.public.apiBase}/auth/google`;
+    window.location.href = `${config.public.apiBase.replace(/\/api\/?$/, '')}/web/auth/google`;
 };
 
 const handleLogout = async () => {
