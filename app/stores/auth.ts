@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       this.user = null;
       const userCookie = useCookie('user')
-      const tokenCookie = useCookie('token')
+      const tokenCookie = useCookie('access_token')
       userCookie.value = null
       tokenCookie.value = null
 
@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
         this.token = null;
         this.user = null;
         const userCookie = useCookie('user')
-        const tokenCookie = useCookie('token')
+        const tokenCookie = useCookie('access_token')
         userCookie.value = null
         tokenCookie.value = null
       }
@@ -93,6 +93,11 @@ export const useAuthStore = defineStore('auth', {
       const { $api } = useNuxtApp()
       const response = await $api<{ message: string }>('/user', { body: data, method: 'PUT' });
       return response;
+    },
+    setToken(tokenData: string) {
+      const tokenCookie = useCookie('access_token')
+      tokenCookie.value = tokenData
+      this.token = tokenData
     },
   }
 });
