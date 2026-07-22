@@ -118,7 +118,7 @@ const handleEmailVerify = async () => {
             {{ authStore.user?.name }}
           </h1>
           <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.email }}</p>
-          <div v-if="authStore.user?.roles.includes('admin')">
+          <div v-if="authStore.user?.roles?.includes('admin')">
             <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.roles.join(', ') }}</p>
             <p class="text-xs text-zinc-400 font-mono mt-0.5">{{ authStore.user?.permissions.join(', ') }}</p>
           </div>
