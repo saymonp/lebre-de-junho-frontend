@@ -20,12 +20,17 @@ export const useAuthStore = defineStore('auth', {
       this.user = userData
       this.token = tokenData
     },
-    async fetchUser() {
+    async fetchUser(overrideToken?: string) {
       const { $api } = useNuxtApp()
-      if (!this.token) return;
+      const activeToken = overrideToken || this.token || useCookie('access_token').value
+      if (!activeToken) return;
       try {
-        const response = await $api<User>('/user');
-        this.setUser(response, this.token);
+        const response = await $api<User>('/user', {
+          headers: {
+            Authorization: `Bearer ${activeToken}`,
+          },
+        });
+        this.setUser(response, activeToken);
       } catch (error) {
         this.logout(); // Se o token for inválido/expirado, limpa tudo
       }
