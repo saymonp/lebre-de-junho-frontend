@@ -25,12 +25,12 @@ export const useAuthStore = defineStore('auth', {
       const activeToken = overrideToken || this.token || useCookie('access_token').value
       if (!activeToken) return;
       try {
-        const response = await $api<User>('/user', {
+        const response = await $api<{data: User}>('/user', {
           headers: {
             Authorization: `Bearer ${activeToken}`,
           },
         });
-        this.setUser(response, activeToken);
+        this.setUser(response.data, activeToken);
       } catch (error) {
         this.logout(); // Se o token for inválido/expirado, limpa tudo
       }
