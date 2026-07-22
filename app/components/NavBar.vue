@@ -22,7 +22,7 @@
                                 class="kurale w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors">
                                 Sair
                             </button>
-                <li v-if="authStore.user?.roles.includes('admin')">
+                <li v-if="authStore.user?.roles?.includes('admin')">
                     <RouterLink to="/admin/dashboard"
                         class="block cursor-pointer p-2.5 text-white no-underline ml-2.5 hover:text-[#DBC695]">
                         <a class="kurale font-bold text-zinc-100">Administrador</a>

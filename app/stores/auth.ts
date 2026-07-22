@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('auth', {
       if (!this.token) return;
       try {
         const response = await $api<User>('/user');
-        this.user = response;
+        this.setUser(response, this.token);
       } catch (error) {
         this.logout(); // Se o token for inválido/expirado, limpa tudo
       }
