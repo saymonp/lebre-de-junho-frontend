@@ -19,7 +19,7 @@ onMounted(async () => {
     authStore.setToken(token)
 
     // 2. Busca os dados do usuário logado na API usando o token recém-salvo
-    await authStore.fetchUser()
+    //await authStore.fetchUser()
 
     // 3. Redireciona para a home ou página principal
     router.push('/')
